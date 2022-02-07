@@ -38,7 +38,6 @@ export interface JetStreamLimits {
   streams: number;
   consumer: number;
   max_bytes_required: boolean;
-
 }
 
 export type OperatorLimits =
