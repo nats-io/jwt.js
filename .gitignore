@@ -1,0 +1,13 @@
+.DS_Store
+# Project exclude paths
+/node_modules/
+/cov_profile/
+/coverage/
+*.lcov
+
+/.idea/
+.vscode
+build/
+
+# ignore local config files
+*/*.conf
