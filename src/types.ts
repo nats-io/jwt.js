@@ -37,6 +37,7 @@ export interface JetStreamLimits {
   "disk_storage": number;
   streams: number;
   consumer: number;
+  max_bytes_required: boolean;
 }
 
 export type OperatorLimits =
@@ -73,7 +74,13 @@ export interface UserLimits {
 
 export type Limits = UserLimits & NatsLimits;
 
-export type ConnectionType = "STANDARD" | "WEBSOCKET" | "LEAFNODE" | "MQTT";
+export type ConnectionType =
+  | "STANDARD"
+  | "WEBSOCKET"
+  | "LEAFNODE"
+  | "LEAFNODE_WS"
+  | "MQTT"
+  | "MQTT_WS";
 
 export interface UserPermissionsLimits extends Permissions, Limits {
   "bearer_token": boolean;
