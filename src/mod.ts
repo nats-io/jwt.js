@@ -21,7 +21,7 @@ export {
   createAccount,
   createOperator,
   createUser,
-  fromSeed
+  fromSeed,
 } from "https://raw.githubusercontent.com/nats-io/nkeys.js/main/modules/esm/mod.ts";
 
 export type { KeyPair } from "https://raw.githubusercontent.com/nats-io/nkeys.js/main/modules/esm/mod.ts";
