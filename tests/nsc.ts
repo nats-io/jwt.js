@@ -138,7 +138,9 @@ function userPath(o: string, a: string, u: string): string {
 }
 
 async function run(...args: string[]): Promise<Std> {
-  const cmd = [Deno.env.get("CI") ? "/home/runner/work/jwt.js/jwt.js/nsc" : "nsc"];
+  const cmd = [
+    Deno.env.get("CI") ? "/home/runner/work/jwt.js/jwt.js/nsc" : "nsc",
+  ];
   cmd.push(...args);
   const nsc = Deno.run({
     cmd: cmd,
