@@ -37,7 +37,8 @@ export interface JetStreamLimits {
   "disk_storage": number;
   streams: number;
   consumer: number;
-  max_bytes_required: boolean;
+  "max_bytes_required": boolean;
+  "ha_resources": number
 }
 
 export type OperatorLimits =
