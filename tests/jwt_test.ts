@@ -44,6 +44,7 @@ import {
   User,
   version,
 } from "../src/mod.ts";
+import { assertExists } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 
 Deno.test("parse table", () => {
   const t =
@@ -475,4 +476,34 @@ Deno.test("jwt - scoped user", async () => {
   assertEquals(uc.nats.data, undefined);
   assertEquals(uc.nats.payload, undefined);
   assertEquals(uc.nats.subs, undefined);
+});
+
+Deno.test("jwt - tiered limits", async () => {
+  const akp = createAccount();
+
+  const token = await encodeAccount("A", akp, {
+    limits: {
+      tiered_limits: {
+        R1: {
+          mem_storage: 1024,
+          disk_storage: 2048,
+          streams: 1,
+          consumer: 10,
+          max_bytes_required: true,
+        },
+        R3: {
+          mem_storage: 1,
+          disk_storage: 2,
+          streams: 3,
+          consumer: 4,
+        },
+      },
+    },
+  });
+
+  const ac = await decode<Account>(token);
+  assertExists(ac);
+  assertExists(ac.nats?.limits?.tiered_limits?.R1);
+  assertEquals(ac.nats?.limits?.tiered_limits?.R1?.disk_storage, 2048);
+  assertExists(ac.nats?.limits?.tiered_limits?.R3);
 });

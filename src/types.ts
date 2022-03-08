@@ -38,13 +38,20 @@ export interface JetStreamLimits {
   streams: number;
   consumer: number;
   "max_bytes_required": boolean;
-  "ha_resources": number
 }
+
+export type JetStreamTieredLimits = {
+  tiered_limits?: {
+    R1?: Partial<JetStreamLimits>;
+    R3?: Partial<JetStreamLimits>;
+  };
+};
 
 export type OperatorLimits =
   & Partial<NatsLimits>
   & Partial<AccountLimits>
-  & Partial<JetStreamLimits>;
+  & Partial<JetStreamLimits>
+  & Partial<JetStreamTieredLimits>;
 
 export interface ResponsePermissions {
   max: number;
