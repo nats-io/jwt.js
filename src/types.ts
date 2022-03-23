@@ -38,6 +38,7 @@ export interface JetStreamLimits {
   streams: number;
   consumer: number;
   "max_bytes_required": boolean;
+  "max_stream_bytes": number;
 }
 
 export type JetStreamTieredLimits = {
