@@ -37,8 +37,9 @@ export interface JetStreamLimits {
   "disk_storage": number;
   streams: number;
   consumer: number;
+  "mem_max_stream_bytes": number;
+  "disk_max_stream_bytes": number;
   "max_bytes_required": boolean;
-  "max_stream_bytes": number;
 }
 
 export type JetStreamTieredLimits = {
