@@ -40,6 +40,7 @@ export interface JetStreamLimits {
   "mem_max_stream_bytes": number;
   "disk_max_stream_bytes": number;
   "max_bytes_required": boolean;
+  "max_ack_pending": number;
 }
 
 export type JetStreamTieredLimits = {
