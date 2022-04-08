@@ -1,4 +1,4 @@
-// Copyright 2021 The NATS Authors
+// Copyright 2021-2022 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,6 +13,7 @@
 
 import {
   Account,
+  Activation,
   ClaimsData,
   Generic,
   Operator,
@@ -128,7 +129,8 @@ export function encodeActivation(
   name: string,
   subject: Key,
   issuer: Key,
-  data: Partial<Generic> = {},
+  kind: "service" | "stream",
+  data: Partial<Activation> = {},
   opts: Partial<EncodingOptions> = {},
 ): Promise<string> {
   subject = checkKey(subject, "", false);
@@ -145,6 +147,8 @@ export function encodeActivation(
     claim.nats.issuer_account = issuer.getPublicKey();
   }
   const o = initAlgorithm(opts);
+  const key = o.algorithm === Algorithms.v2 ? "kind" : "type";
+  claim.nats[key] = kind;
   setVersionType(o.algorithm, Types.Activation, claim);
   return encode(o.algorithm, claim, signer);
 }

@@ -20,6 +20,7 @@ import {
 import { nsc, parseTable } from "./nsc.ts";
 import {
   Account,
+  Activation,
   Algorithms,
   Base64UrlCodec,
   ClaimsData,
@@ -332,7 +333,13 @@ Deno.test("jwt - is account", async () => {
     false,
   );
   assertEquals(
-    isAccount(await decode(await encodeActivation("T", akp, akp))),
+    isAccount(
+      await decode(
+        await encodeActivation("T", akp, akp, "stream", {
+          subject: "foo",
+        } as Activation),
+      ),
+    ),
     false,
   );
   assertEquals(
@@ -350,7 +357,11 @@ Deno.test("jwt - is user", async () => {
     false,
   );
   assertEquals(
-    isUser(await decode(await encodeActivation("T", akp, akp))),
+    isUser(
+      await decode(
+        await encodeActivation("T", akp, akp, "service", { subject: "foo" }),
+      ),
+    ),
     false,
   );
   assertEquals(
@@ -363,7 +374,11 @@ Deno.test("jwt - is activation", async () => {
   const akp = createAccount();
   const ukp = createUser();
   assertEquals(
-    isActivation(await decode(await encodeActivation("T", akp, akp))),
+    isActivation(
+      await decode(
+        await encodeActivation("T", akp, akp, "service", { subject: "foo" }),
+      ),
+    ),
     true,
   );
   assertEquals(
@@ -396,7 +411,11 @@ Deno.test("jwt - is generic", async () => {
     false,
   );
   assertEquals(
-    isGeneric(await decode(await encodeActivation("", akp, akp))),
+    isGeneric(
+      await decode(
+        await encodeActivation("", akp, akp, "service", { subject: "bar" }),
+      ),
+    ),
     false,
   );
 });
@@ -417,10 +436,12 @@ Deno.test("jwt - version", async () => {
     ],
     [await encodeGeneric("G", akp, "kind"), 2],
     [
-      await encodeActivation("T", akp, akp, {}, { algorithm: Algorithms.v1 }),
+      await encodeActivation("T", akp, akp, "service", { subject: "x" }, {
+        algorithm: Algorithms.v1,
+      }),
       1,
     ],
-    [await encodeActivation("T", akp, akp, {}), 2],
+    [await encodeActivation("T", akp, akp, "service", { subject: "y" }), 2],
   ];
 
   const proms: Promise<ClaimsData<unknown>>[] = [];
@@ -454,7 +475,11 @@ Deno.test("jwt - verify activation issuer account", async () => {
   const issuer = createAccount();
 
   const uc = await decode<User>(
-    await encodeActivation("", createAccount(), akp, {}, { signer: issuer }),
+    await encodeActivation("", createAccount(), akp, "service", {
+      subject: "z",
+    }, {
+      signer: issuer,
+    }),
   );
   assertEquals(uc.iss, issuer.getPublicKey());
   assertEquals(uc.nats.issuer_account!, akp.getPublicKey());
@@ -512,5 +537,60 @@ Deno.test("jwt - decode weird", async () => {
   const token =
     `eyJ0eXAiOiJqd3QiLCJhbGciOiJlZDI1NTE5In0.eyJhdWQiOiJOQVRTIiwianRpIjoiVDVBR1NKS0hMNktOTVZSN1ZXSERMVUJINkVPVE1ETURUS1JDSFNDRERMQUxGSEs3S1hKQSIsImlhdCI6MTY0ODgzNDU4NywiaXNzIjoiT0FETUpaVVpRRkVLM1FBNEJMN1JDNEM1MjdZNkZTSlJFRVc0UFFOR05TQ1RTWkNKR0REN0dFWUciLCJuYW1lIjoidGVzdC1kYXNoYm9hcmQiLCJzdWIiOiJBQ0dCNEhaTkpWVFZUNzU0VUUySFpNVERQSEhYQ1lCR0JNSFpOTUxVRk5XNlA3Sjc2T0RNN002QSIsInR5cGUiOiJhY2NvdW50IiwibmF0cyI6eyJpbXBvcnRzIjpbeyJuYW1lIjoiY3JvbiIsInN1YmplY3QiOiJjcm9uLlx1MDAzZSIsImFjY291bnQiOiJBRE1SNFdDUDVRSVVVUVVSNklESFBRNElGU0tPVzRTUUVPSzVPSTQ0UFlEV0Y0R1JQNE9KTzVTSyIsInRvIjoic3luYWRpYSIsInR5cGUiOiJzdHJlYW0ifSx7Im5hbWUiOiJkYXNoYm9hcmQiLCJzdWJqZWN0IjoiZGFzaGJvYXJkLiouKiIsImFjY291bnQiOiJBQjJSSkxVNUo2TFc1R09ZNTNHUTVQMzdCS1BVVlhMWE42SlNVTEJaT0VVUE1IUlUyRklKUUJKSiIsInRva2VuIjoiZXlKMGVYQWlPaUpxZDNRaUxDSmhiR2NpT2lKbFpESTFOVEU1SW4wLmV5SnFkR2tpT2lKVVExbENUVVJDUWxWU1MwNVNVelZOVUV4WVVGWkdRME0zTjB3eVRUTXlVelExUjB0WVRVUkJSVlJPUmtwRk1rbGFVMWRCSWl3aWFXRjBJam94TmpJek9UWTBOakkxTENKcGMzTWlPaUpCUWpKU1NreFZOVW8yVEZjMVIwOVpOVE5IVVRWUU16ZENTMUJWVmxoTVdFNDJTbE5WVEVKYVQwVlZVRTFJVWxVeVJrbEtVVUpLU2lJc0ltNWhiV1VpT2lKa1lYTm9ZbTloY21RaUxDSnpkV0lpT2lKQlEwZENORWhhVGtwV1ZGWlVOelUwVlVVeVNGcE5WRVJRU0VoWVExbENSMEpOU0ZwT1RVeFZSazVYTmxBM1NqYzJUMFJOTjAwMlFTSXNJblI1Y0dVaU9pSmhZM1JwZG1GMGFXOXVJaXdpYm1GMGN5STZleUp6ZFdKcVpXTjBJam9pWkdGemFHSnZZWEprTGlvdUtpNUJRMGRDTkVoYVRrcFdWRlpVTnpVMFZVVXlTRnBOVkVSUVNFaFlRMWxDUjBKTlNGcE9UVXhWUms1WE5sQTNTamMyVDBSTk4wMDJRU0lzSW5SNWNHVWlPaUp6WlhKMmFXTmxJbjE5LlFZWmNMUVRKUGVaYlpNTXVVVkRNYlBmdTZ4QjNUdFhSSUIxWmdzdm9DeTRBRzhkYnFWLVlCQ2pZYk9MYXV1T2xXVmxlOGJWRVZKN0p0YnNvZEo4WUFBIiwidG8iOiJkYXNoYm9hcmQuKi4qLkFDR0I0SFpOSlZUVlQ3NTRVRTJIWk1URFBISFhDWUJHQk1IWk5NTFVGTlc2UDdKNzZPRE03TTZBIiwidHlwZSI6InNlcnZpY2UifSx7Im5hbWUiOiJsaWdvIiwic3ViamVjdCI6ImxpZ28iLCJhY2NvdW50IjoiQURNUjRXQ1A1UUlVVVFVUjZJREhQUTRJRlNLT1c0U1FFT0s1T0k0NFBZRFdGNEdSUDRPSk81U0siLCJ0byI6InN5bmFkaWEubGlnbyIsInR5cGUiOiJzZXJ2aWNlIn0seyJuYW1lIjoibmdzLmFjdGl2ZSIsInN1YmplY3QiOiJuZ3MuYWN0aXZlIiwiYWNjb3VudCI6IkFETVI0V0NQNVFJVVVRVVI2SURIUFE0SUZTS09XNFNRRU9LNU9JNDRQWURXRjRHUlA0T0pPNVNLIiwidG8iOiJuZ3MuYWN0aXZlIiwidHlwZSI6InN0cmVhbSJ9LHsibmFtZSI6Im5ncy5lY2hvIiwic3ViamVjdCI6Im5ncy5lY2hvIiwiYWNjb3VudCI6IkFETVI0V0NQNVFJVVVRVVI2SURIUFE0SUZTS09XNFNRRU9LNU9JNDRQWURXRjRHUlA0T0pPNVNLIiwidG8iOiJuZ3MuZWNobyIsInR5cGUiOiJzdHJlYW0ifSx7Im5hbWUiOiJuZ3MudXNhZ2UiLCJzdWJqZWN0IjoibmdzLnVzYWdlLkFDR0I0SFpOSlZUVlQ3NTRVRTJIWk1URFBISFhDWUJHQk1IWk5NTFVGTlc2UDdKNzZPRE03TTZBIiwiYWNjb3VudCI6IkFETVI0V0NQNVFJVVVRVVI2SURIUFE0SUZTS09XNFNRRU9LNU9JNDRQWURXRjRHUlA0T0pPNVNLIiwidG9rZW4iOiJleUowZVhBaU9pSnFkM1FpTENKaGJHY2lPaUpsWkRJMU5URTVJbjAuZXlKcWRHa2lPaUpLUjBwWFJETkNTMG8xUXpWQlZVZEpSbHBTVVVoUlVsZEZUMVpDVmpWV00xbEJTMVZZU0RSV1NFdzFWMWt6VHpJMVZrUlJJaXdpYVdGMElqb3hOakl6T1RZME5qSTFMQ0pwYzNNaU9pSkJSRTFTTkZkRFVEVlJTVlZWVVZWU05rbEVTRkJSTkVsR1UwdFBWelJUVVVWUFN6VlBTVFEwVUZsRVYwWTBSMUpRTkU5S1R6VlRTeUlzSW01aGJXVWlPaUp1WjNNdWRYTmhaMlVpTENKemRXSWlPaUpCUTBkQ05FaGFUa3BXVkZaVU56VTBWVVV5U0ZwTlZFUlFTRWhZUTFsQ1IwSk5TRnBPVFV4VlJrNVhObEEzU2pjMlQwUk5OMDAyUVNJc0luUjVjR1VpT2lKaFkzUnBkbUYwYVc5dUlpd2libUYwY3lJNmV5SnpkV0pxWldOMElqb2libWR6TG5WellXZGxJaXdpZEhsd1pTSTZJbk5sY25acFkyVWlmWDAua1VYSjJ2bDlHblk3RUFsTEM5emFhZzdsSFExREpzY0JIRVFXUzE3cFp3SHh6NDRVS25yOXB0d1ZrbENfTDVPOGF0b2w4ZzdsTGtRRDcwMlptUm5TRHciLCJ0byI6Im5ncy51c2FnZSIsInR5cGUiOiJzZXJ2aWNlIn1dLCJsaW1pdHMiOnsic3VicyI6MTAsImNvbm4iOjEwLCJpbXBvcnRzIjotMSwiZXhwb3J0cyI6LTEsImRhdGEiOjEwMDAwMDAwMDAsInBheWxvYWQiOjEwMDB9fX0.1oAah_JAmvgTG1n0RwfoZoJlO5vvcuKMFnVm3f5jm_n_Z5OpoKlDA2OjYnaf-MDvtmHs5Vzu4h251Oszc_FABQ`;
   const ac = await decode<Account>(token);
-  console.log(isAccount(ac));
+  assertEquals(isAccount(ac), true);
+});
+
+Deno.test("jwt - activation v2", async () => {
+  const akp = createAccount();
+  const issuer = createAccount();
+  const token = await encodeActivation("test", akp, issuer, "service", {
+    subject: "foo",
+  });
+
+  const ac = await decode<Activation>(token);
+  assertEquals(isActivation(ac), true);
+  assertEquals(ac.iss, issuer.getPublicKey());
+  assertEquals(ac.sub, akp.getPublicKey());
+  assertEquals(ac.nats.version, 2);
+  assertEquals(ac.nats.subject, "foo");
+  assertEquals(ac.nats.kind, "service");
+  assertEquals(ac.nats.type, "activation");
+  assertEquals(ac.nats.issuer_account, undefined);
+});
+
+Deno.test("jwt - activation v2 issuer", async () => {
+  const akp = createAccount();
+  const signer = createAccount();
+  const issuer = createAccount();
+  const token = await encodeActivation("test", akp, issuer, "service", {
+    subject: "foo",
+  }, { signer: signer });
+
+  const ac = await decode<Activation>(token);
+  assertEquals(isActivation(ac), true);
+  assertEquals(ac.iss, signer.getPublicKey());
+  assertEquals(ac.sub, akp.getPublicKey());
+  assertEquals(ac.nats.version, 2);
+  assertEquals(ac.nats.subject, "foo");
+  assertEquals(ac.nats.kind, "service");
+  assertEquals(ac.nats.type, "activation");
+  assertEquals(ac.nats.issuer_account, issuer.getPublicKey());
+});
+
+Deno.test("jwt - activation v1", async () => {
+  const akp = createAccount();
+  const issuer = createAccount();
+  const token = await encodeActivation("test", akp, issuer, "stream", {
+    subject: "foo",
+  }, { algorithm: Algorithms.v1 });
+
+  const ac = await decode<Activation>(token);
+  assertEquals(isActivation(ac), true);
+  assertEquals(ac.iss, issuer.getPublicKey());
+  assertEquals(ac.sub, akp.getPublicKey());
+  assertEquals(ac.nats.version, undefined);
+  assertEquals(ac.nats.subject, "foo");
+  assertEquals(ac.nats.type, "stream");
+  assertEquals(ac.type, "activation");
+  assertEquals(ac.nats.issuer_account, undefined);
 });
