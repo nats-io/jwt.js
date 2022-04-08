@@ -28,22 +28,26 @@ import {
 
 export function isOperator(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
-  return gen.type === Types.Operator;
+  const type = version(c) === 1 ? c.type : gen.type;
+  return type === Types.Operator;
 }
 
 export function isAccount(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
-  return gen.type === Types.Account;
+  const type = version(c) === 1 ? c.type : gen.type;
+  return type === Types.Account;
 }
 
 export function isUser(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
-  return gen.type === Types.User;
+  const type = version(c) === 1 ? c.type : gen.type;
+  return type === Types.User;
 }
 
 export function isActivation(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
-  return gen.type === Types.Activation;
+  const type = version(c) === 1 ? c.type : gen.type;
+  return type === Types.Activation;
 }
 
 export function isGeneric(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
