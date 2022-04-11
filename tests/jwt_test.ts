@@ -15,7 +15,6 @@ import {
   assert,
   assertEquals,
   assertThrowsAsync,
-  fail,
 } from "https://deno.land/std@0.103.0/testing/asserts.ts";
 import { nsc, parseTable } from "./nsc.ts";
 import {
@@ -34,6 +33,7 @@ import {
   encodeGeneric,
   encodeOperator,
   encodeUser,
+  equivalent,
   isAccount,
   isActivation,
   isGeneric,
@@ -444,18 +444,13 @@ Deno.test("jwt - version", async () => {
     [await encodeActivation("T", akp, akp, "service", { subject: "y" }), 2],
   ];
 
-  const proms: Promise<ClaimsData<unknown>>[] = [];
+  const claims: ClaimsData<unknown>[] = [];
   tests.map((v) => {
-    proms.push(decode(v[0]));
+    claims.push(decode(v[0]));
   });
 
-  const cds = await Promise.allSettled(proms);
-  cds.forEach((v, idx) => {
-    if (v.status === "rejected") {
-      fail(`${idx}: ${v.reason}`);
-    } else {
-      assertEquals(version(v.value), tests[idx][1]);
-    }
+  claims.forEach((v, idx) => {
+    assertEquals(version(v), tests[idx][1]);
   });
 });
 
@@ -593,4 +588,128 @@ Deno.test("jwt - activation v1", async () => {
   assertEquals(ac.nats.type, "stream");
   assertEquals(ac.type, "activation");
   assertEquals(ac.nats.issuer_account, undefined);
+});
+
+Deno.test("jwt - equivalent", async () => {
+  const okp = createOperator();
+  const akp = createAccount();
+  const srv = createAccount();
+  let a = await encodeAccount("A", akp, {}, { signer: okp });
+  let b = await encodeAccount("B", akp, {}, { signer: okp });
+  const u = await encodeUser("A", createUser(), akp, {});
+  assertEquals(await equivalent(a, a), true, "same claim");
+  assertEquals(await equivalent(a, b), false, "diff accounts");
+  assertEquals(await equivalent(a, u), false, "diff kind");
+
+  // same account same service - different tokens generated
+  a = await encodeAccount("A", akp, {
+    imports: [
+      {
+        name: "srv",
+        subject: "a.b",
+        to: "ab",
+        account: srv.getPublicKey(),
+        type: "service",
+        token: await encodeActivation(
+          "test",
+          akp.getPublicKey(),
+          srv.getPublicKey(),
+          "service",
+          { subject: "ab" },
+          { signer: srv },
+        ),
+      },
+    ],
+  }, { signer: okp });
+
+  b = await encodeAccount("A", akp, {
+    imports: [
+      {
+        name: "srv",
+        subject: "a.b",
+        to: "ab",
+        account: srv.getPublicKey(),
+        type: "service",
+        token: await encodeActivation(
+          "test",
+          akp.getPublicKey(),
+          srv.getPublicKey(),
+          "service",
+          { subject: "ab" },
+          { signer: srv },
+        ),
+      },
+    ],
+  }, { signer: okp });
+  assertEquals(await equivalent(a, b), true, "same import");
+
+  // using local subject
+  b = await encodeAccount("A", akp, {
+    imports: [
+      {
+        name: "srv",
+        subject: "a.b",
+        local_subject: "ab",
+        account: srv.getPublicKey(),
+        type: "service",
+        token: await encodeActivation(
+          "test",
+          akp.getPublicKey(),
+          srv.getPublicKey(),
+          "service",
+          { subject: "ab" },
+          { signer: srv },
+        ),
+      },
+    ],
+  }, { signer: okp });
+  assertEquals(await equivalent(a, b), false, "import is different");
+
+  // different subject
+  a = await encodeAccount("A", akp, {
+    imports: [
+      {
+        name: "srv",
+        subject: "a.b",
+        to: "ab",
+        account: srv.getPublicKey(),
+        type: "service",
+      },
+    ],
+  }, { signer: okp });
+  b = await encodeAccount("A", akp, {
+    imports: [
+      {
+        name: "srv",
+        subject: `a.b.${akp.getPublicKey()}`,
+        local_subject: "ab",
+        account: srv.getPublicKey(),
+        type: "service",
+      },
+    ],
+  }, { signer: okp });
+  assertEquals(await equivalent(a, b), false, "import is different");
+
+  // different type
+  a = await encodeAccount("A", akp, {
+    imports: [
+      {
+        name: "srv",
+        subject: "a.b",
+        account: srv.getPublicKey(),
+        type: "stream",
+      },
+    ],
+  }, { signer: okp });
+  b = await encodeAccount("A", akp, {
+    imports: [
+      {
+        name: "srv",
+        subject: `a.b`,
+        account: srv.getPublicKey(),
+        type: "service",
+      },
+    ],
+  }, { signer: okp });
+  assertEquals(await equivalent(a, b), false, "type is different");
 });
