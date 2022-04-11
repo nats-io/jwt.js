@@ -183,7 +183,7 @@ function setVersionType(
   }
 }
 
-export async function decode<T = unknown>(jwt: string): Promise<ClaimsData<T>> {
+export function decode<T = unknown>(jwt: string): ClaimsData<T> {
   const chunks = jwt.split(".");
   if (chunks.length !== 3) {
     throw new Error(`invalid jwt - ${chunks.length} chunks: ${jwt}`);

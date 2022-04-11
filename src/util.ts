@@ -12,6 +12,8 @@
 // limitations under the License.
 
 import {
+  Account,
+  Activation,
   ClaimsData,
   Generic,
   IssuerAccount,
@@ -25,6 +27,7 @@ import {
   UserLimits,
   UserPermissionsLimits,
 } from "./types.ts";
+import { decode } from "https://raw.githubusercontent.com/nats-io/jwt.js/main/src/jwt.ts";
 
 export function isOperator(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
@@ -125,4 +128,37 @@ export function randomID(): string {
 export function issuer(claim: ClaimsData<unknown>): string {
   const ia = claim.nats as IssuerAccount;
   return ia.issuer_account ? ia.issuer_account : claim.iss;
+}
+
+export async function equivalent(a: string, b: string): Promise<boolean> {
+  // remove the iat - issued at, and the jti as these will be
+  // different unless the same JWT
+  const replacer = (k: string, v: unknown): unknown => {
+    return (k === "iat" || k === "jti") ? undefined : v;
+  };
+
+  // if we are looking at an account claim, we need to expand
+  // any tokens we have as we also must remove iat and jti
+  const expandTokens = (c: ClaimsData<Account>) => {
+    c.nats.imports = c.nats.imports ?? [];
+    c.nats.imports.forEach((im) => {
+      if (im.token) {
+        const td = decode<Activation>(im.token);
+        im.token = JSON.stringify(td, replacer, " ");
+      }
+    });
+  };
+
+  const ca = await decode(a);
+  if (isAccount(ca)) {
+    expandTokens(ca);
+  }
+  const cb = await decode(b);
+  if (isAccount(cb)) {
+    expandTokens(cb);
+  }
+
+  const as = JSON.stringify(ca, replacer, " ");
+  const bs = JSON.stringify(cb, replacer, " ");
+  return as === bs;
 }
