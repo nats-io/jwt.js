@@ -185,6 +185,7 @@ export interface Operator {
   "account_server_url"?: string;
   "operator_service_urls"?: string[];
   "system_account"?: string;
+  "disallow_bearer"?: boolean;
 }
 
 export interface Account extends Info, GenericFields {
