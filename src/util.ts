@@ -130,7 +130,11 @@ export function issuer(claim: ClaimsData<unknown>): string {
   return ia.issuer_account ? ia.issuer_account : claim.iss;
 }
 
-export async function equivalent(a: string, b: string, debug = false): Promise<boolean> {
+export async function equivalent(
+  a: string,
+  b: string,
+  debug = false,
+): Promise<boolean> {
   // remove the iat - issued at, and the jti as these will be
   // different unless the same JWT
   const replacer = (k: string, v: unknown): unknown => {
@@ -160,7 +164,7 @@ export async function equivalent(a: string, b: string, debug = false): Promise<b
 
   const as = JSON.stringify(ca, replacer, " ");
   const bs = JSON.stringify(cb, replacer, " ");
-  if(debug) {
+  if (debug) {
     console.log(as, "===", bs);
   }
   return as === bs;
