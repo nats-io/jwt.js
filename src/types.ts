@@ -185,7 +185,6 @@ export interface Operator {
   "account_server_url"?: string;
   "operator_service_urls"?: string[];
   "system_account"?: string;
-  "disallow_bearer"?: boolean;
 }
 
 export interface Account extends Info, GenericFields {
@@ -195,6 +194,7 @@ export interface Account extends Info, GenericFields {
   "signing_keys"?: SigningKeys;
   revocations?: RevocationList;
   "default_permissions"?: Partial<Permissions>;
+  "disallow_bearer"?: boolean;
 }
 
 export interface ScopedUser extends GenericFields {

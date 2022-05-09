@@ -11,3 +11,5 @@ build/
 
 # ignore local config files
 */*.conf
+npm/
+experimental/
