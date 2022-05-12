@@ -13,3 +13,4 @@ build/
 */*.conf
 npm/
 experimental/
+esm/jwt.js
