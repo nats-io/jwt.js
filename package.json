@@ -1,5 +1,5 @@
 {
-  "name": "@nats-io/jwt.js",
+  "name": "nats-jwt",
   "version": "0.0.1",
   "description": "NATS jwt.js",
   "main": "cjs/jwt.js",
