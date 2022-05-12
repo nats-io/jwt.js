@@ -1,4 +1,4 @@
-// Copyright 2020-2021 The NATS Authors
+// Copyright 2020-2022 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -27,7 +27,7 @@ import {
   UserLimits,
   UserPermissionsLimits,
 } from "./types.ts";
-import { decode } from "https://raw.githubusercontent.com/nats-io/jwt.js/main/src/jwt.ts";
+import { decode } from "./jwt.ts";
 
 export function isOperator(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;

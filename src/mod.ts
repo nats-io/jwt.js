@@ -1,4 +1,4 @@
-// Copyright 2020-2021 The NATS Authors
+// Copyright 2020-2022 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -22,6 +22,5 @@ export {
   createOperator,
   createUser,
   fromSeed,
-} from "https://raw.githubusercontent.com/nats-io/nkeys.js/main/modules/esm/mod.ts";
-
-export type { KeyPair } from "https://raw.githubusercontent.com/nats-io/nkeys.js/main/modules/esm/mod.ts";
+} from "./nkeys.ts";
+export type { KeyPair } from "./nkeys.ts";

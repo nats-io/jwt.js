@@ -1,0 +1,57 @@
+{
+  "name": "@nats-io/jwt.js",
+  "version": "0.0.1",
+  "description": "NATS jwt.js",
+  "main": "cjs/jwt.js",
+  "module": "./esm/jwt.js",
+  "exports": {
+    ".": {
+      "require": "./cjs/jwt.js",
+      "import": "./esm/jwt.js"
+    }
+  },
+  "types": "lib/mod.d.ts",
+  "files": [
+    "cjs/",
+    "esm/",
+    "lib/",
+    "MAINTAINERS.md",
+    "CODE-OF-CONDUCT.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "setup": "curl -fsSL https://deno.land/x/install/install.sh | sh",
+    "fmt": "deno fmt src/*.ts test/*.ts test/*/*.ts",
+    "prepack": "npm run build",
+    "clean": "shx rm -Rf ./esm/jwt.js ./lib ./.deps ./cjs_src",
+    "build": "npm run clean && npm run build-cjs && npm run build-esm",
+    "cjs": "deno run --allow-all ./bin/cjs-fix-imports.ts -o cjs_src/ ./src",
+    "build-cjs": "npm run cjs && tsc && shx rm -Rf ./cjs_src",
+    "build-esm": "deno run --allow-all --unstable --reload src/mod.ts && deno bundle --log-level info --unstable src/mod.ts ./esm/jwt.js",
+    "test": "deno test"
+  },
+  "dependencies": {
+    "nkeys.js": "^1.0.0-9"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.32",
+    "shx": "^0.3.3",
+    "tslint": "^6.1.3",
+    "typescript": "^4.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nats-io/jwt.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nats-io/jwt.js/issues"
+  },
+  "keywords": [
+    "NATS",
+    "JWT"
+  ],
+  "author": {
+    "name": "The NATS Authors"
+  },
+  "license": "Apache-2.0"
+}

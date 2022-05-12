@@ -30,7 +30,7 @@ import {
   randomID,
 } from "./util.ts";
 import { checkKey, Key } from "./keys.ts";
-import { KeyPair } from "https://raw.githubusercontent.com/nats-io/nkeys.js/main/modules/esm/mod.ts";
+import { KeyPair } from "./nkeys.ts";
 import { Base64Codec, Base64UrlCodec } from "./base64.ts";
 
 export enum Algorithms {
