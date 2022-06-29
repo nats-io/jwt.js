@@ -30,6 +30,7 @@ export interface AccountLimits {
   wildcards: boolean;
   conn: number;
   leaf: number;
+  disallow_bearer: boolean;
 }
 
 export interface JetStreamLimits {
