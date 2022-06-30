@@ -713,3 +713,14 @@ Deno.test("jwt - equivalent", async () => {
   }, { signer: okp });
   assertEquals(await equivalent(a, b), false, "type is different");
 });
+
+Deno.test("jwt - account disallow_bearer", async () => {
+  const akp = createAccount();
+  let token = await encodeAccount("A", akp, {});
+  let ac = await decode<Account>(token);
+  assertEquals(ac.nats.disallow_bearer, undefined);
+
+  token = await encodeAccount("A", akp, { disallow_bearer: true });
+  ac = await decode<Account>(token);
+  assertEquals(ac.nats.disallow_bearer, true);
+});
