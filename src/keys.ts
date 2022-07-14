@@ -13,6 +13,10 @@
 
 import { fromPublic, fromSeed, KeyPair } from "./nkeys.ts";
 
+/**
+ * Key is a generalized representation of an NKey in one of its
+ * possible serialized forms: string, Uint8Array or KeyPair
+ */
 export type Key = string | Uint8Array | KeyPair;
 
 function parseKey(v: string | Uint8Array): KeyPair {

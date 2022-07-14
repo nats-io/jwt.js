@@ -29,34 +29,58 @@ import {
 } from "./types.ts";
 import { decode } from "./jwt.ts";
 
+/**
+ * Returns true if the ClaimsData is for an Operator
+ * @param c
+ */
 export function isOperator(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
   const type = version(c) === 1 ? c.type : gen.type;
   return type === Types.Operator;
 }
 
+/**
+ * Returns true if the ClaimsData is for an Account
+ * @param c
+ */
 export function isAccount(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
   const type = version(c) === 1 ? c.type : gen.type;
   return type === Types.Account;
 }
 
+/**
+ * Returns true if the ClaimsData is for a User
+ * @param c
+ */
 export function isUser(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
   const type = version(c) === 1 ? c.type : gen.type;
   return type === Types.User;
 }
 
+/**
+ * Returns true if the ClaimsData is for an Activation
+ * @param c
+ */
 export function isActivation(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   const gen = c.nats as Generic;
   const type = version(c) === 1 ? c.type : gen.type;
   return type === Types.Activation;
 }
 
+/**
+ * Returns true if the ClaimsData is generic
+ * @param c
+ */
 export function isGeneric(c: ClaimsData<unknown>): c is ClaimsData<Generic> {
   return !isAccount(c) && !isUser(c) && !isActivation(c);
 }
 
+/**
+ * Returns the version of the JWT
+ * @param c
+ */
 export function version(c: ClaimsData<unknown>): number {
   const gen = c.nats as Generic;
   return gen.version ? gen.version : 1;

@@ -33,6 +33,9 @@ import { checkKey, Key } from "./keys.ts";
 import { KeyPair } from "./nkeys.ts";
 import { Base64Codec, Base64UrlCodec } from "./base64.ts";
 
+/**
+ * Enum capturing the JWT algorithm
+ */
 export enum Algorithms {
   v1 = "ed25519",
   v2 = "ed25519-nkey",
@@ -59,6 +62,13 @@ function initAlgorithm(opts: Partial<EncodingOptions> = {}): EncodingOptions {
   return opts as EncodingOptions;
 }
 
+/**
+ * Generates an operator JWT
+ * @param name - the operator name
+ * @param okp - a key representing the operator
+ * @param operator - operator options
+ * @param opts - encoding options
+ */
 export async function encodeOperator(
   name: string,
   okp: Key,
@@ -79,6 +89,14 @@ export async function encodeOperator(
   return await encode(o.algorithm, claim, signer);
 }
 
+/**
+ * Generates an account JWT with the specified name having the identity of the
+ * providedd Key.
+ * @param name
+ * @param akp
+ * @param account
+ * @param opts
+ */
 export async function encodeAccount(
   name: string,
   akp: Key,
