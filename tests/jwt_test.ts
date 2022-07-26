@@ -483,9 +483,12 @@ Deno.test("jwt - verify activation issuer account", async () => {
 Deno.test("jwt - operator", async () => {
   const okp = createOperator();
   const oc = await decode<Operator>(
-    await encodeOperator("O", okp, {}),
+    await encodeOperator("O", okp, { tags: ["a"] }),
   );
   assertEquals(oc.name, "O");
+  assertEquals(oc.nats.tags, ["a"]);
+  assertEquals(oc.nats.version, 2);
+  assertEquals(oc.nats.type, Types.Operator);
 });
 
 Deno.test("jwt - scoped user", async () => {

@@ -181,7 +181,7 @@ export interface SigningKey {
   template: Partial<UserPermissionsLimits>;
 }
 
-export interface Operator {
+export interface Operator extends GenericFields {
   "signing_keys"?: SigningKeys;
   "account_server_url"?: string;
   "operator_service_urls"?: string[];
