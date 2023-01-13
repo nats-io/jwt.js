@@ -46,13 +46,14 @@ export interface UserEncodingOptions extends EncodingOptions {
 }
 
 export interface EncodingOptions extends ValidDates {
+  aud?: string;
   algorithm: Algorithms;
   signer?: Key;
 }
 
 function initClaim<T>(opts: Partial<EncodingOptions>): ClaimsData<T> {
-  const { exp, nbf } = opts;
-  return extend({}, { exp, nbf }) as ClaimsData<T>;
+  const { exp, nbf, aud } = opts;
+  return extend({}, { exp, nbf, aud }) as ClaimsData<T>;
 }
 
 function initAlgorithm(opts: Partial<EncodingOptions> = {}): EncodingOptions {
@@ -137,7 +138,6 @@ export async function encodeUser(
   if (opts.signer) {
     claim.nats.issuer_account = issuer.getPublicKey();
   }
-  claim.aud = "NATS";
   const o = initAlgorithm(opts);
   setVersionType(o.algorithm, Types.User, claim);
   return await encode(o.algorithm, claim, signer);
@@ -193,7 +193,7 @@ function setVersionType(
   type: Types | string,
   claim: ClaimsData<Generic>,
 ) {
-  claim.aud = "NATS";
+  claim.aud = claim.aud || "NATS";
   if (version === Algorithms.v2) {
     claim.nats.type = type;
   } else {

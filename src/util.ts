@@ -112,7 +112,7 @@ export function defaultUserLimits(): Required<UserLimits> {
 }
 
 export function defaultUserPermissionsLimits(
-  d: (Partial<UserPermissionsLimits> | Partial<Permissions> | Partial<Limits>) =
+  d: Partial<UserPermissionsLimits> | Partial<Permissions> | Partial<Limits> =
     {} as Partial<UserPermissionsLimits>,
 ): UserPermissionsLimits {
   return extend(
@@ -131,6 +131,7 @@ export function defaultUser(d: Partial<User> = {}): Partial<User> {
 export function extend(a: unknown, ...b: unknown[]): unknown {
   for (let i = 0; i < b.length; i++) {
     const o = b[i];
+    //@ts-ignore: raw
     Object.assign(a, o);
   }
   return a;
