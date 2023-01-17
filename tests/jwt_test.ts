@@ -14,8 +14,9 @@
 import {
   assert,
   assertEquals,
-  assertThrowsAsync,
-} from "https://deno.land/std@0.103.0/testing/asserts.ts";
+  assertExists,
+  assertRejects,
+} from "https://deno.land/std@0.171.0/testing/asserts.ts";
 import { nsc, parseTable } from "./nsc.ts";
 import {
   Account,
@@ -27,6 +28,7 @@ import {
   createOperator,
   createUser,
   decode,
+  defaultUserLimits,
   defaultUserPermissionsLimits,
   encodeAccount,
   encodeActivation,
@@ -45,7 +47,6 @@ import {
   User,
   version,
 } from "../src/mod.ts";
-import { assertExists } from "https://deno.land/std@0.95.0/testing/asserts.ts";
 
 Deno.test("parse table", () => {
   const t =
@@ -82,7 +83,7 @@ Deno.test("parse table", () => {
 
 Deno.test("jwt - rejects bad chunks", async () => {
   const jwt = `eyJhbGciOiJIUzI1NiIsInR`;
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await decode(jwt);
     },
@@ -94,7 +95,7 @@ Deno.test("jwt - rejects bad chunks", async () => {
 Deno.test("jwt - rejects bad algorithm", async () => {
   const jwt =
     `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`;
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await decode(jwt);
     },
@@ -120,7 +121,7 @@ Deno.test("jwt - rejects bad type", async () => {
     JSON.stringify({ typ: "Foo", alg: "ed25519-nkey" }),
   );
 
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await decode(chunks.join("."));
     },
@@ -134,7 +135,7 @@ Deno.test("jwt - rejects bad signature", async () => {
   const token = await encodeAccount("A", akp);
   const chunks = token.split(".");
   chunks[2] = chunks[2].split("").reverse().join("");
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await decode<Account>(chunks.join("."));
     },
@@ -223,7 +224,7 @@ Deno.test("jwt - account signer can be operator or account", async () => {
   const id = createAccount();
   await encodeAccount("A", id, {} as Account, { signer: okp });
   await encodeAccount("A", id, {} as Account, { signer: akp });
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeAccount("A", id, {} as Account, { signer: ukp });
     },
@@ -237,14 +238,14 @@ Deno.test("jwt - account id must be account", async () => {
   const akp = createAccount();
   const ukp = createUser();
   await encodeAccount("A", akp, {} as Account, { signer: okp });
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeAccount("A", okp, {} as Account, { signer: okp });
     },
     Error,
     "unexpected type O - wanted A",
   );
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeAccount("A", ukp, {} as Account, { signer: okp });
     },
@@ -258,14 +259,14 @@ Deno.test("jwt - user id must be user", async () => {
   const akp = createAccount();
   const ukp = createUser();
   await encodeUser("A", ukp, akp);
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeUser("A", akp, akp);
     },
     Error,
     "unexpected type A - wanted U",
   );
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeUser("A", okp, akp);
     },
@@ -279,14 +280,14 @@ Deno.test("jwt - user issuer must be account", async () => {
   const akp = createAccount();
   const ukp = createUser();
   await encodeUser("A", ukp, akp);
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeUser("A", ukp, ukp);
     },
     Error,
     "unexpected type U - wanted A",
   );
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeUser("A", ukp, okp);
     },
@@ -300,14 +301,14 @@ Deno.test("jwt - user issuer_account must be account", async () => {
   const akp = createAccount();
   const ukp = createUser();
   await encodeUser("A", ukp, akp, {}, { signer: akp });
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeUser("A", ukp, akp, {}, { signer: ukp });
     },
     Error,
     "unexpected type U - wanted A",
   );
-  await assertThrowsAsync(
+  await assertRejects(
     async () => {
       await encodeUser("A", ukp, akp, {}, { signer: okp });
     },
@@ -726,4 +727,22 @@ Deno.test("jwt - account disallow_bearer", async () => {
   token = await encodeAccount("A", akp, { disallow_bearer: true });
   ac = await decode<Account>(token);
   assertEquals(ac.nats.disallow_bearer, true);
+});
+
+Deno.test("jwt - custom aud", async () => {
+  const akp = createAccount();
+  let at = await encodeAccount("A", akp, {}, { aud: "hello" });
+  let ac = await decode<Account>(at);
+  assertEquals(ac.aud, "hello");
+
+  const ukp = createUser();
+  let ut = await encodeUser("A", ukp, akp, defaultUserLimits(), {
+    aud: "hello",
+  });
+  let uc = await decode<User>(ut);
+  assertEquals(uc.aud, "hello");
+
+  let gt = await encodeGeneric("A", akp, "my-kind", {}, { aud: "hello" });
+  let gc = await decode<unknown>(ut);
+  assertEquals(gc.aud, "hello");
 });

@@ -20,7 +20,7 @@ export class Base64Codec {
     return btoa(String.fromCharCode(...a));
   }
 
-  static decode(s: string, binary = false): (Uint8Array | string) {
+  static decode(s: string, binary = false): Uint8Array | string {
     const bin = atob(s);
     if (!binary) {
       return bin;
@@ -38,7 +38,7 @@ export class Base64UrlCodec {
     return Base64UrlCodec.toB64URLEncoding(Base64Codec.encode(bytes));
   }
 
-  static decode(s: string, binary = false): (Uint8Array | string) {
+  static decode(s: string, binary = false): Uint8Array | string {
     return Base64Codec.decode(Base64UrlCodec.fromB64URLEncoding(s), binary);
   }
 

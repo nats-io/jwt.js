@@ -1,7 +1,6 @@
 {
-    "readme": "none",
-    "theme": "default",
-    "out": "docs/",
-    "entryPoints": ["cjs_src/mod.ts"]
+  "readme": "none",
+  "theme": "default",
+  "out": "docs/",
+  "entryPoints": ["cjs_src/mod.ts"]
 }
-
