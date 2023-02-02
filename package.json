@@ -1,6 +1,6 @@
 {
   "name": "nats-jwt",
-  "version": "0.0.4-1",
+  "version": "0.0.5",
   "description": "NATS jwt.js",
   "main": "cjs/jwt.js",
   "module": "./esm/jwt.js",
@@ -34,14 +34,14 @@
     "doc": "npm run clean && rm -Rf docs && npm run build && node_modules/.bin/typedoc --out docs/ && touch ./docs/.nojekyll"
   },
   "dependencies": {
-    "nkeys.js": "1.0.3"
+    "nkeys.js": "1.0.5"
   },
   "devDependencies": {
     "shx": "^0.3.3",
-    "@types/node": "^18.0.0",
-    "ava": "^4.2.0",
+    "@types/node": "^18.11.x",
+    "ava": "^5.1.x",
     "typedoc": "^0.23.x",
-    "typescript": "^4.7.x"
+    "typescript": "^4.9.x"
   },
   "ava": {
     "failFast": true,
