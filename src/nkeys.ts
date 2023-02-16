@@ -19,7 +19,14 @@ const createUser = nkeys.createUser;
 const createServer = nkeys.createServer;
 const fromSeed = nkeys.fromSeed;
 const fromPublic = nkeys.fromPublic;
-export { createAccount, createOperator, createUser, createServer, fromPublic, fromSeed };
+export {
+  createAccount,
+  createOperator,
+  createServer,
+  createUser,
+  fromPublic,
+  fromSeed,
+};
 
 export interface KeyPair {
   getPublicKey(): string;

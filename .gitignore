@@ -16,3 +16,4 @@ experimental/
 esm/jwt.js
 cjs_src/
 debug/
+lib/
