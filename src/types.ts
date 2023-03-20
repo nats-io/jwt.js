@@ -16,6 +16,7 @@ export enum Types {
   Account = "account",
   User = "user",
   Activation = "activation",
+  AuthorizationResponse = "authorization_response",
 }
 
 export interface NatsLimits {
@@ -99,7 +100,7 @@ export interface UserPermissionsLimits extends Permissions, Limits {
   "allowed_connection_types": ConnectionType[];
 }
 
-export type User = UserPermissionsLimits & IssuerAccount;
+export type User = UserPermissionsLimits & IssuerAccount & GenericFields;
 
 export interface ValidDates {
   exp?: number;
@@ -206,4 +207,9 @@ export interface ScopedUser extends GenericFields {
 
 export interface IssuerAccount {
   "issuer_account"?: string;
+}
+
+export interface AuthorizationResponse extends GenericFields, IssuerAccount {
+  error?: string;
+  jwt?: string;
 }

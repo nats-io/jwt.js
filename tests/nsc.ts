@@ -12,18 +12,65 @@
 // limitations under the License.
 
 import { dirname, join } from "https://deno.land/std/path/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.103.0/fs/mod.ts";
+import { ensureDir } from "https://deno.land/std/fs/mod.ts";
 import { assert } from "https://deno.land/std/testing/asserts.ts";
 import { nuid } from "https://raw.githubusercontent.com/nats-io/nats.deno/main/nats-base-client/nuid.ts";
 import type { KeyPair } from "../src/mod.ts";
 import { Account, decode, fromSeed, Types } from "../src/mod.ts";
+import RunOptions = Deno.RunOptions;
 
-const root = await Deno.makeTempDir();
-const storeDir = join(root, "store");
-const keysDir = join(root, "keystore");
+let root;
 
-Deno.env.set("NKEYS_PATH", keysDir);
-await run("env", "--store", storeDir);
+if (!Deno.env.has("XDG_CONFIG_HOME")) {
+  root = await Deno.makeTempDir();
+  const config = join(root, "config");
+  Deno.env.set("XDG_CONFIG_HOME", config);
+}
+if (
+  Deno.env.has("XDG_DATA_HOME") === false
+) {
+  root = root ?? await Deno.makeTempDir();
+  const storeDir = join(root, "data");
+  Deno.env.set("XDG_DATA_HOME", storeDir);
+}
+
+export function setNscData(p: string) {
+  Deno.env.set("XDG_DATA_HOME", p);
+}
+
+export function setNscConfig(p: string) {
+  Deno.env.set("XDG_CONFIG_HOME", p);
+}
+
+export function setNKeysDir(p: string) {
+  Deno.env.set("NKEYS_PATH", p);
+}
+
+export function getDataHome(): string {
+  const p = Deno.env.get("XDG_DATA_HOME") ?? "";
+  return p;
+}
+
+export function getConfigHome(): string {
+  return join(Deno.env.get("XDG_CONFIG_HOME") ?? "");
+}
+
+export function getKeysDir(): string {
+  if (Deno.env.has("NKEYS_PATH")) {
+    return Deno.env.get("NKEYS_PATH")!;
+  }
+  return join(getDataHome(), "nats", "nsc", "keys");
+}
+
+export function getStoresDir(): string {
+  const stores = join(
+    Deno.env.get("XDG_DATA_HOME") ?? "",
+    "nats",
+    "nsc",
+    "stores",
+  );
+  return stores;
+}
 
 export interface Std {
   out: string;
@@ -31,6 +78,7 @@ export interface Std {
 }
 
 export interface Nsc {
+  env(): Promise<Std>;
   addOperator(): Promise<[string, Std]>;
   getOperator(n: string): Promise<string>;
   getAccount(o: string, a: string): Promise<string>;
@@ -41,6 +89,9 @@ export interface Nsc {
 }
 
 export const nsc: Nsc = {
+  async env(): Promise<Std> {
+    return await run("env");
+  },
   async addOperator(): Promise<[string, Std]> {
     const name = nuid.next();
     const std = await run("add", "operator", name);
@@ -56,7 +107,7 @@ export const nsc: Nsc = {
     return Deno.readTextFile(userPath(o, a, u));
   },
   async findKeyPair(pk: string): Promise<KeyPair> {
-    const fp = join(keysDir, "keys", pk[0], pk.slice(1, 3), `${pk}.nk`);
+    const fp = join(getKeysDir(), "keys", pk[0], pk.slice(1, 3), `${pk}.nk`);
     const seed = await Deno.readTextFile(fp);
     return fromSeed(new TextEncoder().encode(seed));
   },
@@ -126,15 +177,18 @@ export function parseTable(s: string): string[][] {
 }
 
 function operatorPath(n: string): string {
-  return join(storeDir, n, `${n}.jwt`);
+  const p = join(getStoresDir(), n, `${n}.jwt`);
+  return p;
 }
 
 function accountPath(o: string, a: string): string {
-  return join(storeDir, o, "accounts", a, `${a}.jwt`);
+  const p = join(getStoresDir(), o, "accounts", a, `${a}.jwt`);
+  return p;
 }
 
 function userPath(o: string, a: string, u: string): string {
-  return join(storeDir, o, "accounts", a, "users", `${u}.jwt`);
+  const p = join(getStoresDir(), o, "accounts", a, "users", `${u}.jwt`);
+  return p;
 }
 
 async function run(...args: string[]): Promise<Std> {
@@ -142,15 +196,17 @@ async function run(...args: string[]): Promise<Std> {
     Deno.env.get("CI") ? "/home/runner/work/jwt.js/jwt.js/nsc" : "nsc",
   ];
   cmd.push(...args);
-  const nsc = Deno.run({
+  const opts: RunOptions = {
     cmd: cmd,
     stderr: "piped",
     stdout: "piped",
     stdin: "null",
     env: {
-      NKEYS_PATH: keysDir,
+      XDG_DATA_HOME: getDataHome(),
+      XDG_CONFIG_HOME: getConfigHome(),
     },
-  });
+  };
+  const nsc = Deno.run(opts);
   const { success } = await nsc.status();
   const out = new TextDecoder().decode(await nsc.output());
   const err = new TextDecoder().decode(await nsc.stderrOutput());

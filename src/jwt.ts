@@ -14,6 +14,7 @@
 import {
   Account,
   Activation,
+  AuthorizationResponse,
   ClaimsData,
   Generic,
   Operator,
@@ -183,9 +184,45 @@ export async function encodeGeneric(
   claim.name = name;
   claim.nats = data;
   claim.sub = akp.getPublicKey();
+  akp = checkKey(akp, "", !opts.signer);
+  let signer = akp;
+  if (opts.signer) {
+    signer = checkKey(opts.signer, "", true);
+  }
+  if (opts.signer) {
+    claim.nats.issuer_account = akp.getPublicKey();
+  }
   const o = initAlgorithm(opts);
   setVersionType(o.algorithm, kind, claim);
-  return await encode(o.algorithm, claim, akp);
+  return await encode(o.algorithm, claim, signer);
+}
+
+export async function encodeAuthorizationResponse(
+  user: Key,
+  server: Key,
+  issuer: Key,
+  data: Partial<AuthorizationResponse>,
+  opts: Partial<EncodingOptions>,
+): Promise<string> {
+  opts = opts || {};
+  // this is only in v2
+  opts.algorithm = Algorithms.v2;
+  user = checkKey(user, "U", false);
+  server = checkKey(server, "N", false);
+  issuer = checkKey(issuer, "A", false);
+  let signer = issuer;
+  if (opts.signer) {
+    signer = checkKey(opts.signer, "A", true);
+  }
+  const claim = initClaim<AuthorizationResponse>(opts);
+  claim.sub = user.getPublicKey();
+  claim.aud = server.getPublicKey();
+  claim.nats = data;
+  if (opts.signer) {
+    claim.nats.issuer_account = issuer.getPublicKey();
+  }
+  setVersionType(opts.algorithm, Types.AuthorizationResponse, claim);
+  return await encode(opts.algorithm, claim, signer);
 }
 
 function setVersionType(

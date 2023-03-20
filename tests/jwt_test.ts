@@ -13,25 +13,29 @@
 
 import {
   assert,
+  assertArrayIncludes,
   assertEquals,
   assertExists,
   assertRejects,
-} from "https://deno.land/std@0.171.0/testing/asserts.ts";
+} from "https://deno.land/std/testing/asserts.ts";
 import { nsc, parseTable } from "./nsc.ts";
 import {
   Account,
   Activation,
   Algorithms,
+  AuthorizationResponse,
   Base64UrlCodec,
   ClaimsData,
   createAccount,
   createOperator,
+  createServer,
   createUser,
   decode,
   defaultUserLimits,
   defaultUserPermissionsLimits,
   encodeAccount,
   encodeActivation,
+  encodeAuthorizationResponse,
   encodeGeneric,
   encodeOperator,
   encodeUser,
@@ -731,18 +735,54 @@ Deno.test("jwt - account disallow_bearer", async () => {
 
 Deno.test("jwt - custom aud", async () => {
   const akp = createAccount();
-  let at = await encodeAccount("A", akp, {}, { aud: "hello" });
-  let ac = await decode<Account>(at);
+  const at = await encodeAccount("A", akp, {}, { aud: "hello" });
+  const ac = await decode<Account>(at);
   assertEquals(ac.aud, "hello");
 
   const ukp = createUser();
-  let ut = await encodeUser("A", ukp, akp, defaultUserLimits(), {
+  const ut = await encodeUser("A", ukp, akp, defaultUserLimits(), {
     aud: "hello",
   });
-  let uc = await decode<User>(ut);
+  const uc = await decode<User>(ut);
   assertEquals(uc.aud, "hello");
 
-  let gt = await encodeGeneric("A", akp, "my-kind", {}, { aud: "hello" });
-  let gc = await decode<unknown>(ut);
+  const gt = await encodeGeneric("A", akp, "my-kind", {}, { aud: "hello" });
+  const gc = await decode<unknown>(gt);
   assertEquals(gc.aud, "hello");
+});
+
+Deno.test("jwt - tags", async () => {
+  const [o] = await nsc.addOperator();
+  await nsc.run("add", "account", "A");
+  await nsc.run("edit", "account", "--tag", "a", "--tag", "b", "--tag", "c");
+  const ac = await decode<Account>(await nsc.getAccount(o, "A"));
+  assertExists(ac.nats.tags);
+  assertArrayIncludes(ac.nats.tags, ["a", "b", "c"]);
+  ac.nats.tags.push("d");
+  assertArrayIncludes(ac.nats.tags, ["d"]);
+
+  await nsc.run("add", "user", "u");
+  await nsc.run("edit", "user", "--tag", "x", "--tag", "y", "--tag", "z");
+  const uc = await decode<User>(await nsc.getUser(o, "A", "u"));
+  assertExists(uc.nats.tags);
+  assertArrayIncludes(uc.nats.tags, ["x", "y", "z"]);
+  uc.nats.tags.push("zz");
+  assertArrayIncludes(uc.nats.tags, ["zz"]);
+});
+
+Deno.test("jwt - authorization response", async () => {
+  const user = createUser();
+  const server = createServer();
+  const account = createAccount();
+  const sk = createAccount();
+
+  const tok = await encodeAuthorizationResponse(user, server, account, {
+    jwt: "hello",
+  }, { signer: sk });
+  const ar = decode<AuthorizationResponse>(tok);
+  assertEquals(ar.sub, user.getPublicKey());
+  assertEquals(ar.aud, server.getPublicKey());
+  assertEquals(ar.iss, sk.getPublicKey());
+  assertEquals(ar.nats.issuer_account, account.getPublicKey());
+  assertEquals(ar.nats.jwt, "hello");
 });

@@ -20,9 +20,9 @@ export * from "./util.ts";
 export {
   createAccount,
   createOperator,
-  createUser,
   createServer,
-  fromSeed,
+  createUser,
   fromPublic,
+  fromSeed,
 } from "./nkeys.ts";
 export type { KeyPair } from "./nkeys.ts";

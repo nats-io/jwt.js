@@ -1,0 +1,15 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.177.0/"
+  },
+  "lint": {
+    "files": {
+      "exclude": ["docs/", "lib/", "esm/jwt.js", "debug/", "cjs/", "cjs_src/"]
+    }
+  },
+  "fmt": {
+    "files": {
+      "exclude": ["docs/", "lib/", "esm/jwt.js", "debug/", "cjs/", "cjs_src/"]
+    }
+  }
+}
