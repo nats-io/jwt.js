@@ -26,14 +26,14 @@ Deno.test("nsc - env", async () => {
   const std = await nsc.env();
   const table = parseTable(std.err);
   const nscHome = table.find((v) => {
-    return v[0] === "$NSC_HOME";
+    return v[0] === "$NSC_HOME (deprecated)";
   })?.[2];
   if (nscHome) {
     assertEquals(homeDir(nscHome), join(getConfigHome(), "nats", "nsc"));
   }
 
   const nkeys = table.find((v) => {
-    return v[0] === "$NKEYS_PATH";
+    return v[0] === "$NKEYS_PATH (deprecated)";
   });
   const nkeysPath = nkeys?.[2];
   assertEquals(homeDir(nkeysPath), getKeysDir());
@@ -56,13 +56,13 @@ Deno.test("nsc - set env nkeys_path", async () => {
   const std = await nsc.env();
   const table = parseTable(std.err);
   const nscHome = table.find((v) => {
-    return v[0] === "$NSC_HOME";
+    return v[0] === "$NSC_HOME (deprecated)";
   })?.[2];
   assertEquals(homeDir(nscHome), join(getConfigHome(), "nats", "nsc"));
   assert(nscHome?.includes("my_test_"));
 
   const nkeys = table.find((v) => {
-    return v[0] === "$NKEYS_PATH";
+    return v[0] === "$NKEYS_PATH (deprecated)";
   });
   const nkeysPath = nkeys?.[2];
   assertEquals(homeDir(nkeysPath), nkeysDir);
@@ -84,15 +84,16 @@ Deno.test("nsc - set nkeys dir", async () => {
   setNscConfig(join(dir, "config"));
 
   const std = await nsc.env();
+
   const table = parseTable(std.err);
   const nscHome = table.find((v) => {
-    return v[0] === "$NSC_HOME";
+    return v[0] === "$NSC_HOME (deprecated)";
   })?.[2];
   assertEquals(nscHome, join(getConfigHome(), "nats", "nsc"));
   assert(nscHome?.includes("my_test_"));
 
   const nkeys = table.find((v) => {
-    return v[0] === "$NKEYS_PATH";
+    return v[0] === "$NKEYS_PATH (deprecated)";
   });
   const nkeysPath = nkeys?.[2];
   assertEquals(nkeysPath, getKeysDir());
