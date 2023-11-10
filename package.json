@@ -1,6 +1,6 @@
 {
   "name": "nats-jwt",
-  "version": "0.0.5",
+  "version": "0.0.7-1",
   "description": "NATS jwt.js",
   "main": "cjs/jwt.js",
   "module": "./esm/jwt.js",
@@ -31,17 +31,20 @@
     "test": "ava --verbose && deno test -A --unstable tests/",
     "ava": "ava --verbose",
     "lint": "deno lint src/",
-    "doc": "npm run clean && rm -Rf docs && npm run build && node_modules/.bin/typedoc --out docs/ && touch ./docs/.nojekyll"
+    "doc": "npm run clean && rm -Rf docs && npm run build && node_modules/.bin/typedoc --out docs/ && touch ./docs/.nojekyll",
+    "check-package": "deno run --allow-all bin/check-bundle-version.ts",
+    "bump-qualifier": "npm version prerelease --no-commit-hooks --no-git-tag-version",
+    "bump-release": "npm version patch --no-commit-hooks --no-git-tag-version"
   },
   "dependencies": {
     "nkeys.js": "1.0.5"
   },
   "devDependencies": {
     "shx": "^0.3.3",
-    "@types/node": "^18.11.x",
-    "ava": "^5.1.x",
-    "typedoc": "^0.23.x",
-    "typescript": "^4.9.x"
+    "@types/node": "^20.9.0",
+    "ava": "^5.3.x",
+    "typedoc": "^0.25.x",
+    "typescript": "^5.2.x"
   },
   "ava": {
     "failFast": true,
