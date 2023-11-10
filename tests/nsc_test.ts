@@ -12,8 +12,8 @@ import {
   assertEquals,
   assertFalse,
 } from "https://deno.land/std/testing/asserts.ts";
-import { join } from "https://deno.land/std@0.177.0/path/mod.ts";
-import { assert } from "https://raw.githubusercontent.com/nats-io/nats.deno/v1.7.0-rc/nats-base-client/denobuffer.ts";
+import { join } from "https://deno.land/std/path/mod.ts";
+import { assert } from "https://raw.githubusercontent.com/nats-io/nats.deno/v1.18.0/nats-base-client/denobuffer.ts";
 
 function homeDir(p?: string) {
   if (p?.includes("~/")) {
