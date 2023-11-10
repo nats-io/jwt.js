@@ -32,6 +32,7 @@
     "ava": "ava --verbose",
     "lint": "deno lint src/",
     "doc": "npm run clean && rm -Rf docs && npm run build && node_modules/.bin/typedoc --out docs/ && touch ./docs/.nojekyll",
+    "check-package": "deno run --allow-all bin/check-bundle-version.ts",
     "bump-qualifier": "npm version prerelease --no-commit-hooks --no-git-tag-version",
     "bump-release": "npm version patch --no-commit-hooks --no-git-tag-version"
   },
