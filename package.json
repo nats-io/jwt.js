@@ -6,6 +6,7 @@
   "module": "./esm/jwt.js",
   "exports": {
     ".": {
+      "types": "./lib/mod.d.ts",
       "require": "./cjs/jwt.js",
       "import": "./esm/jwt.js"
     }
