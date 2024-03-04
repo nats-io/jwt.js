@@ -213,3 +213,58 @@ export interface AuthorizationResponse extends GenericFields, IssuerAccount {
   error?: string;
   jwt?: string;
 }
+
+export type AuthorizationRequest = {
+  readonly server_id: ServerId;
+  readonly user_nkey: string;
+  readonly client_info: ClientInfo;
+  readonly connect_opts: ConnectOpts;
+  readonly client_tls?: ClientTls;
+  readonly request_nonce?: string;
+  readonly tags?: ReadonlyArray<string>;
+  readonly type?: string;
+  readonly version?: number;
+};
+
+export type ServerId = {
+  readonly name: string;
+  readonly host: string;
+  readonly id: string;
+  readonly version?: string;
+  readonly cluster?: string;
+  readonly tags?: ReadonlyArray<string>;
+  readonly xkey?: string;
+};
+
+export type ClientInfo = {
+  readonly host?: string;
+  readonly id?: number;
+  readonly user?: string;
+  readonly name?: string;
+  readonly tags?: ReadonlyArray<string>;
+  readonly name_tag?: string;
+  readonly kind?: string;
+  readonly type?: string;
+  readonly mqtt_id?: string;
+  readonly nonce?: string;
+};
+
+export type ConnectOpts = {
+  readonly jwt?: string;
+  readonly nkey?: string;
+  readonly sig?: string;
+  readonly auth_token?: string;
+  readonly user?: string;
+  readonly pass?: string;
+  readonly name?: string;
+  readonly lang?: string;
+  readonly version?: string;
+  readonly protocol: number;
+};
+
+export type ClientTls = {
+  readonly version?: string;
+  readonly cipher?: string;
+  readonly certs?: ReadonlyArray<string>;
+  readonly verified_chains?: ReadonlyArray<ReadonlyArray<string>>;
+};
