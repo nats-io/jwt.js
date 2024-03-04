@@ -38,14 +38,14 @@
     "bump-release": "npm version patch --no-commit-hooks --no-git-tag-version"
   },
   "dependencies": {
-    "nkeys.js": "1.0.5"
+    "nkeys.js": "1.1.0"
   },
   "devDependencies": {
     "shx": "^0.3.3",
-    "@types/node": "^20.9.0",
-    "ava": "^5.3.x",
-    "typedoc": "^0.25.x",
-    "typescript": "^5.2.x"
+    "@types/node": "^20.11.x",
+    "ava": "^6.1.x",
+    "typedoc": "^0.25.10",
+    "typescript": "^5.3.x"
   },
   "ava": {
     "failFast": true,

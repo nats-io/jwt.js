@@ -17,7 +17,6 @@ import { assert } from "https://deno.land/std/testing/asserts.ts";
 import { nuid } from "https://raw.githubusercontent.com/nats-io/nats.deno/main/nats-base-client/nuid.ts";
 import type { KeyPair } from "../src/mod.ts";
 import { Account, decode, fromSeed, Types } from "../src/mod.ts";
-import RunOptions = Deno.RunOptions;
 
 let root;
 
@@ -196,7 +195,7 @@ async function run(...args: string[]): Promise<Std> {
     Deno.env.get("CI") ? "/home/runner/work/jwt.js/jwt.js/nsc" : "nsc",
   ];
   cmd.push(...args);
-  const opts: RunOptions = {
+  const opts: Deno.RunOptions = {
     cmd: cmd,
     stderr: "piped",
     stdout: "piped",
