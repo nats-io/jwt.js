@@ -1,6 +1,6 @@
 {
   "name": "nats-jwt",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "NATS jwt.js",
   "main": "cjs/jwt.js",
   "module": "./esm/jwt.js",
