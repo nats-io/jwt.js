@@ -1,8 +1,17 @@
 {
   "name": "@nats-io/jwt",
-  "version": "0.0.9-1",
+  "version": "0.0.9-2",
   "exports": {
     ".": "./src/mod.ts"
+  },
+  "publish": {
+    "include": [
+      "LICENSE",
+      "CODE-OF-CONDUCT.md",
+      "MANTAINERS.md",
+      "README.md",
+      "src/**/*"
+    ]
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@0.225.1",
