@@ -1,7 +1,12 @@
 {
   "name": "@nats-io/jwt",
+  "version": "0.0.9",
+  "exports": {
+    ".": "./src/mod.ts"
+  },
   "imports": {
-    "std/": "https://deno.land/std@0.206.0/"
+    "std/": "https://deno.land/std@0.206.0/",
+    "@nats-io/nkeys": "jsr:@nats-io/nkeys"
   },
   "lint": {
     "exclude": ["docs/", "lib/", "esm/jwt.js", "debug/", "cjs/", "cjs_src/"]

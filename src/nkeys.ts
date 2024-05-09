@@ -1,4 +1,4 @@
-// Copyright 2021-2023 The NATS Authors
+// Copyright 2021-2024 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as nkeys from "https://raw.githubusercontent.com/nats-io/nkeys.js/v1.0.5/modules/esm/mod.ts";
+import * as nkeys from "@nats-io/nkeys";
 
 const createOperator = nkeys.createOperator;
 const createAccount = nkeys.createAccount;
