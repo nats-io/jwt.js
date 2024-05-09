@@ -11,9 +11,9 @@ import {
 import {
   assertEquals,
   assertFalse,
-} from "https://deno.land/std/testing/asserts.ts";
-import { join } from "https://deno.land/std/path/mod.ts";
-import { assert } from "https://raw.githubusercontent.com/nats-io/nats.deno/v1.18.0/nats-base-client/denobuffer.ts";
+  assert
+} from "@std/assert";
+import { join } from "@std/path";
 
 function homeDir(p?: string) {
   if (p?.includes("~/")) {

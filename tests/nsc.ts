@@ -1,4 +1,4 @@
-// Copyright 2021 The NATS Authors
+// Copyright 2021-2024 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,9 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { dirname, join } from "https://deno.land/std/path/mod.ts";
-import { ensureDir } from "https://deno.land/std/fs/mod.ts";
-import { assert } from "https://deno.land/std/testing/asserts.ts";
+import { dirname, join } from "@std/path";
+import { ensureDir } from "@std/fs";
+import { assert } from "@std/assert";
 import { nuid } from "https://raw.githubusercontent.com/nats-io/nats.deno/main/nats-base-client/nuid.ts";
 import type { KeyPair } from "../src/mod.ts";
 import { Account, decode, fromSeed, Types } from "../src/mod.ts";

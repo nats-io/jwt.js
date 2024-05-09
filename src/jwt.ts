@@ -1,4 +1,4 @@
-// Copyright 2021-2023 The NATS Authors
+// Copyright 2021-2024 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
+import type {
   Account,
   Activation,
   AuthorizationResponse,
@@ -19,19 +19,22 @@ import {
   Generic,
   Operator,
   SigningKey,
-  Types,
   User,
   UserPermissionsLimits,
   ValidDates,
 } from "./types.ts";
+import {
+  Types
+} from "./types.ts"
 import {
   defaultUser,
   defaultUserPermissionsLimits,
   extend,
   randomID,
 } from "./util.ts";
-import { checkKey, Key } from "./keys.ts";
-import { KeyPair } from "./nkeys.ts";
+import { checkKey } from "./keys.ts";
+import type { Key } from "./keys.ts"
+import type { KeyPair } from "./nkeys.ts";
 import { Base64Codec, Base64UrlCodec } from "./base64.ts";
 
 /**
