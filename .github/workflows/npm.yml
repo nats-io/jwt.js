@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-        deno-version: [1.37.2]
+        deno-version: [1.43.1]
 
     runs-on: ubuntu-latest
     permissions:
