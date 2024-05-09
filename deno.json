@@ -1,4 +1,5 @@
 {
+  "name": "@nats-io/jwt",
   "imports": {
     "std/": "https://deno.land/std@0.206.0/"
   },
