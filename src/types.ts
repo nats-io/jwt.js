@@ -93,7 +93,8 @@ export type ConnectionType =
   | "LEAFNODE"
   | "LEAFNODE_WS"
   | "MQTT"
-  | "MQTT_WS";
+  | "MQTT_WS"
+  | "IN_PROCESS";
 
 export interface UserPermissionsLimits extends Permissions, Limits {
   "bearer_token": boolean;
