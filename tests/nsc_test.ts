@@ -8,11 +8,7 @@ import {
   setNscConfig,
   setNscData,
 } from "./nsc.ts";
-import {
-  assertEquals,
-  assertFalse,
-  assert
-} from "@std/assert";
+import { assert, assertEquals, assertFalse } from "@std/assert";
 import { join } from "@std/path";
 
 function homeDir(p?: string) {

@@ -12,7 +12,7 @@
 // limitations under the License.
 
 import { fromPublic, fromSeed } from "./nkeys.ts";
-import type {KeyPair} from "./nkeys.ts"
+import type { KeyPair } from "./nkeys.ts";
 
 /**
  * Key is a generalized representation of an NKey in one of its

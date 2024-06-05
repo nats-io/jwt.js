@@ -27,9 +27,7 @@ import type {
   UserPermissionsLimits,
 } from "./types.ts";
 
-import {
-  Types
-} from "./types.ts";
+import { Types } from "./types.ts";
 
 import { decode } from "./jwt.ts";
 

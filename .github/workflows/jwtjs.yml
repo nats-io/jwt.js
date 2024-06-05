@@ -13,7 +13,7 @@ jobs:
   test:
     strategy:
       matrix:
-        deno-version: [1.43.1]
+        deno-version: [1.44.0]
     environment: CI
     runs-on: ubuntu-latest
     steps:

@@ -1,6 +1,6 @@
 {
   "name": "@nats-io/jwt",
-  "version": "0.0.9-3",
+  "version": "0.0.10-1",
   "exports": {
     ".": "./src/mod.ts"
   },

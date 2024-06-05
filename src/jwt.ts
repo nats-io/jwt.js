@@ -23,9 +23,7 @@ import type {
   UserPermissionsLimits,
   ValidDates,
 } from "./types.ts";
-import {
-  Types
-} from "./types.ts"
+import { Types } from "./types.ts";
 import {
   defaultUser,
   defaultUserPermissionsLimits,
@@ -33,7 +31,7 @@ import {
   randomID,
 } from "./util.ts";
 import { checkKey } from "./keys.ts";
-import type { Key } from "./keys.ts"
+import type { Key } from "./keys.ts";
 import type { KeyPair } from "./nkeys.ts";
 import { Base64Codec, Base64UrlCodec } from "./base64.ts";
 
