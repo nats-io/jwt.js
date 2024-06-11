@@ -19,13 +19,18 @@ import {
   assertRejects,
 } from "@std/assert";
 import { nsc, parseTable } from "./nsc.ts";
-import {
+import type {
   Account,
   Activation,
-  Algorithms,
   AuthorizationResponse,
-  Base64UrlCodec,
   ClaimsData,
+  Operator,
+  Permissions,
+  User,
+} from "../src/mod.ts";
+import {
+  Algorithms,
+  Base64UrlCodec,
   createAccount,
   createOperator,
   createServer,
@@ -45,10 +50,7 @@ import {
   isGeneric,
   isUser,
   newScopedSigner,
-  Operator,
-  Permissions,
   Types,
-  User,
   version,
 } from "../src/mod.ts";
 

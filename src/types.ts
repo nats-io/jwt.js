@@ -198,6 +198,13 @@ export interface Account extends Info, GenericFields {
   revocations?: RevocationList;
   "default_permissions"?: Partial<Permissions>;
   "disallow_bearer"?: boolean;
+  "authorization"?: Partial<ExternalAuthorization>;
+}
+
+export interface ExternalAuthorization {
+  auth_users: string[];
+  allowed_accounts: string[];
+  xkey: string;
 }
 
 export interface ScopedUser extends GenericFields {
