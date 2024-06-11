@@ -225,7 +225,6 @@
     "packageJson": {
       "dependencies": [
         "npm:@types/node@^20.11.x",
-        "npm:ava@^6.1.x",
         "npm:nkeys.js@1.1.0",
         "npm:shx@^0.3.3",
         "npm:typedoc@^0.25.10",
