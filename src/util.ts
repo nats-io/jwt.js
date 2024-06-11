@@ -1,4 +1,4 @@
-// Copyright 2020-2022 The NATS Authors
+// Copyright 2020-2024 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
+import type {
   Account,
   Activation,
   ClaimsData,
@@ -22,11 +22,13 @@ import {
   Permission,
   Permissions,
   ResponsePermissions,
-  Types,
   User,
   UserLimits,
   UserPermissionsLimits,
 } from "./types.ts";
+
+import { Types } from "./types.ts";
+
 import { decode } from "./jwt.ts";
 
 /**

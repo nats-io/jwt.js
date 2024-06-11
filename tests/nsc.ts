@@ -1,4 +1,4 @@
-// Copyright 2021 The NATS Authors
+// Copyright 2021-2024 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,12 +11,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { dirname, join } from "https://deno.land/std/path/mod.ts";
-import { ensureDir } from "https://deno.land/std/fs/mod.ts";
-import { assert } from "https://deno.land/std/testing/asserts.ts";
+import { dirname, join } from "@std/path";
+import { ensureDir } from "@std/fs";
+import { assert } from "@std/assert";
 import { nuid } from "https://raw.githubusercontent.com/nats-io/nats.deno/main/nats-base-client/nuid.ts";
 import type { KeyPair } from "../src/mod.ts";
-import { Account, decode, fromSeed, Types } from "../src/mod.ts";
+import { decode, fromSeed, Types } from "../src/mod.ts";
+import type { Account } from "../src/mod.ts";
 
 let root;
 
@@ -62,13 +63,12 @@ export function getKeysDir(): string {
 }
 
 export function getStoresDir(): string {
-  const stores = join(
+  return join(
     Deno.env.get("XDG_DATA_HOME") ?? "",
     "nats",
     "nsc",
     "stores",
   );
-  return stores;
 }
 
 export interface Std {
@@ -194,9 +194,9 @@ async function run(...args: string[]): Promise<Std> {
   const cmd = [
     Deno.env.get("CI") ? "/home/runner/work/jwt.js/jwt.js/nsc" : "nsc",
   ];
-  cmd.push(...args);
-  const opts: Deno.RunOptions = {
-    cmd: cmd,
+
+  const opts: Deno.CommandOptions = {
+    args,
     stderr: "piped",
     stdout: "piped",
     stdin: "null",
@@ -205,11 +205,40 @@ async function run(...args: string[]): Promise<Std> {
       XDG_CONFIG_HOME: getConfigHome(),
     },
   };
-  const nsc = Deno.run(opts);
-  const { success } = await nsc.status();
-  const out = new TextDecoder().decode(await nsc.output());
-  const err = new TextDecoder().decode(await nsc.stderrOutput());
+
+  async function fromReadableStream(
+    rs: ReadableStream<Uint8Array>,
+  ): Promise<string> {
+    const buf: Uint8Array[] = [];
+    let size = 0;
+    const reader = rs.getReader();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (value && value.length > 0) {
+        size += value.length;
+        buf.push(value);
+      }
+      if (done) {
+        break;
+      }
+    }
+
+    const r = new Uint8Array(size);
+    let offset = 0;
+    for (let i = 0; i < buf.length; i++) {
+      const v = buf[i];
+      r.set(v, offset);
+      offset += v.length;
+    }
+    return new TextDecoder().decode(r);
+  }
+
+  const nsc = new Deno.Command(cmd.join(" "), opts);
+  const p = nsc.spawn();
+  const { success } = await p.status;
+  const out = await fromReadableStream(p.stdout);
+  const err = await fromReadableStream(p.stderr);
+
   assert(success);
-  nsc.close();
   return Promise.resolve({ out, err });
 }

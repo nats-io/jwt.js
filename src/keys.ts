@@ -1,4 +1,4 @@
-// Copyright 2021-2022 The NATS Authors
+// Copyright 2021-2024 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,7 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fromPublic, fromSeed, KeyPair } from "./nkeys.ts";
+import { fromPublic, fromSeed } from "./nkeys.ts";
+import type { KeyPair } from "./nkeys.ts";
 
 /**
  * Key is a generalized representation of an NKey in one of its

@@ -1,4 +1,4 @@
-// Copyright 2021-2022 The NATS Authors
+// Copyright 2021-2024 The NATS Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -69,9 +69,9 @@ export interface Permission {
 }
 
 export interface Permissions {
-  pub: Permission;
-  sub: Permission;
-  resp: ResponsePermissions;
+  pub?: Partial<Permission>;
+  sub?: Partial<Permission>;
+  resp?: Partial<ResponsePermissions>;
 }
 
 export interface TimeRange {
@@ -93,7 +93,8 @@ export type ConnectionType =
   | "LEAFNODE"
   | "LEAFNODE_WS"
   | "MQTT"
-  | "MQTT_WS";
+  | "MQTT_WS"
+  | "IN_PROCESS";
 
 export interface UserPermissionsLimits extends Permissions, Limits {
   "bearer_token": boolean;
@@ -197,6 +198,13 @@ export interface Account extends Info, GenericFields {
   revocations?: RevocationList;
   "default_permissions"?: Partial<Permissions>;
   "disallow_bearer"?: boolean;
+  "authorization"?: Partial<ExternalAuthorization>;
+}
+
+export interface ExternalAuthorization {
+  auth_users: string[];
+  allowed_accounts: string[];
+  xkey: string;
 }
 
 export interface ScopedUser extends GenericFields {
