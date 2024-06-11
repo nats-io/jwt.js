@@ -65,7 +65,7 @@ for (const fn of files) {
   const data = await Deno.readFile(fn);
   const txt = new TextDecoder().decode(data);
 
-  let mod = txt.replace(/jsr:@nats-io\/nkeys/gim, "nkeys.js");
+  let mod = txt.replace(/(jsr:@nats-io\/nkeys)(@\d+.\d+.\d+(-\d+)?)?/gim, "nkeys.js");
   if (!fn.endsWith("nkeys.ts") && !fn.endsWith("nuid.ts")) {
     mod = mod.replace(/from\s+"(\S+).[t|j]s"/gim, 'from "$1"');
   }
