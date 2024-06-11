@@ -1,6 +1,6 @@
 {
   "name": "nats-jwt",
-  "version": "0.0.10-3",
+  "version": "0.0.10-4",
   "description": "NATS jwt.js",
   "main": "cjs/jwt.js",
   "module": "./esm/jwt.js",
@@ -37,11 +37,11 @@
     "bump-release": "npm version patch --no-commit-hooks --no-git-tag-version"
   },
   "dependencies": {
-    "nkeys.js": "1.1.0"
+    "nkeys.js": "^1.2.0-4"
   },
   "devDependencies": {
-    "shx": "^0.3.3",
     "@types/node": "^20.11.x",
+    "shx": "^0.3.3",
     "typedoc": "^0.25.10",
     "typescript": "^5.3.x"
   },

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as nkeys from "jsr:@nats-io/nkeys";
+import * as nkeys from "jsr:@nats-io/nkeys@1.2.0-4";
 
 const createOperator = nkeys.createOperator;
 const createAccount = nkeys.createAccount;
