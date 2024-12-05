@@ -6,7 +6,9 @@
     "moduleResolution": "nodenext",
     "sourceMap": true,
     "declaration": true,
-    "removeComments": false
+    "allowJs": true,
+    "removeComments": false,
+    "resolveJsonModule": true
   },
   "include": [
     "cjs_src/"

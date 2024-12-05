@@ -1,20 +1,10 @@
 {
-  "name": "nats-jwt",
-  "version": "0.0.10-5",
+  "name": "@nats-io/jwt",
+  "version": "0.0.10-9",
   "description": "NATS jwt.js",
-  "main": "cjs/jwt.js",
-  "module": "./esm/jwt.js",
-  "exports": {
-    ".": {
-      "types": "./lib/mod.d.ts",
-      "require": "./cjs/jwt.js",
-      "import": "./esm/jwt.js"
-    }
-  },
+  "main": "lib/mod.js",
   "types": "lib/mod.d.ts",
   "files": [
-    "cjs/",
-    "esm/",
     "lib/",
     "MAINTAINERS.md",
     "CODE-OF-CONDUCT.md",
@@ -25,10 +15,9 @@
     "fmt": "deno fmt src/*/*.ts test/*.ts test/*/*.ts node_test/*.js",
     "prepare": "npm run build",
     "clean": "shx rm -Rf ./esm/jwt.js ./lib ./.deps ./cjs_src",
-    "build": "npm run clean && deno run -A bin/generate_version.ts && npm run build-cjs && npm run build-esm",
+    "build": "npm run clean && deno run -A bin/generate_version.ts && npm run build-cjs",
     "cjs": "shx rm -Rf ./cjs_src && deno run --allow-all ./bin/cjs-fix-imports.ts -o cjs_src/ ./src",
     "build-cjs": "npm run cjs && tsc",
-    "build-esm": "deno run --allow-all  --reload src/mod.ts && deno bundle --log-level info src/mod.ts ./esm/jwt.js",
     "test": "deno test -A --unstable tests/",
     "lint": "deno lint src/",
     "doc": "npm run clean && rm -Rf docs && npm run build && node_modules/.bin/typedoc --out docs/ && touch ./docs/.nojekyll",
@@ -37,13 +26,13 @@
     "bump-release": "npm version patch --no-commit-hooks --no-git-tag-version"
   },
   "dependencies": {
-    "nkeys.js": "^1.2.0-4"
+    "@nats-io/nkeys": "2.0.0-4"
   },
   "devDependencies": {
-    "@types/node": "^20.14.x",
+    "@types/node": "^22.7.6",
     "shx": "^0.3.3",
-    "typedoc": "^0.25.13",
-    "typescript": "^5.4.5"
+    "typedoc": "^0.27.3",
+    "typescript": "^5.7.2"
   },
   "repository": {
     "type": "git",

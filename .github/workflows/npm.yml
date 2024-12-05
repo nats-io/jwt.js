@@ -8,8 +8,8 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: [20.x]
-        deno-version: [1.44.0]
+        node-version: [23.x]
+        deno-version: [2.1.x]
 
     runs-on: ubuntu-latest
     permissions:
@@ -42,5 +42,3 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npx jsr publish --allow-dirty
-
-

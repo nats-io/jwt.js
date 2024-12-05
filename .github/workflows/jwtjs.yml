@@ -3,9 +3,9 @@ name: CI
 on:
   push:
     tags:
-      - '*'
+      - "*"
     branches:
-      - '*'
+      - "*"
   pull_request:
     branches: [main]
 
@@ -13,7 +13,7 @@ jobs:
   test:
     strategy:
       matrix:
-        deno-version: [1.44.0]
+        deno-version: [2.1.x]
     environment: CI
     runs-on: ubuntu-latest
     steps:

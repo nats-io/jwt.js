@@ -11,28 +11,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as nkeys from "jsr:@nats-io/nkeys@1.2.0-4";
-
-const createOperator = nkeys.createOperator;
-const createAccount = nkeys.createAccount;
-const createUser = nkeys.createUser;
-const createServer = nkeys.createServer;
-const fromSeed = nkeys.fromSeed;
-const fromPublic = nkeys.fromPublic;
-export {
-  createAccount,
-  createOperator,
-  createServer,
-  createUser,
-  fromPublic,
-  fromSeed,
-};
-
-export interface KeyPair {
-  getPublicKey(): string;
-  getPrivateKey(): Uint8Array;
-  getSeed(): Uint8Array;
-  sign(input: Uint8Array): Uint8Array;
-  verify(input: Uint8Array, sig: Uint8Array): boolean;
-  clear(): void;
-}
+export * from "@nats-io/nkeys";
