@@ -242,7 +242,7 @@ function setVersionType(
 export function decode<T = unknown>(jwt: string): ClaimsData<T> {
   const chunks = jwt.split(".");
   if (chunks.length !== 3) {
-    throw new Error(`invalid jwt - ${chunks.length} chunks: ${jwt}`);
+    throw new Error(`invalid jwt - ${chunks.length} chunks`);
   }
 
   const h = JSON.parse(Base64UrlCodec.decode(chunks[0]) as string);

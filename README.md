@@ -1,5 +1,16 @@
 # jwt.js
 
+[![License](https://img.shields.io/badge/Licence-Apache%202.0-blue.svg)](./LICENSE)
+![jwt](https://github.com/nats-io/jwt.js/actions/workflows/jwtjs.yml/badge.svg)
+[![JSDoc](https://img.shields.io/badge/JSDoc-reference-blue)](https://nats-io.github.io/jwt.js/)
+
+[![JSR](https://jsr.io/badges/@nats-io/jwt)](https://jsr.io/@nats-io/jwt)
+[![JSR](https://jsr.io/badges/@nats-io/jwt/score)](https://jsr.io/@nats-io/jwt)
+
+[![NPM Version](https://img.shields.io/npm/v/%40nats-io%2Fjwt)](https://www.npmjs.com/package/@nats-io/jwt)
+![NPM Downloads](https://img.shields.io/npm/dt/%40nats-io%2Fjwt)
+![NPM Downloads](https://img.shields.io/npm/dm/%40nats-io%2Fjwt)
+
 JWT tokens signed using nkeys for Ed25519 for the NATS JavaScript ecosystem.
 
 ### Very Important Disclaimer
@@ -21,7 +32,47 @@ Under that context, ultimate validity of the JWT is delegated to tools or
 servers that use the [NATS JWT Go library](github.com/nats-io/jwt). Use of this
 library implies an agreement with the above disclaimer.
 
-### API
+## Installation
+
+This module is distributed in two different registries:
+
+- npm a node-specific library supporting CJS (`require`) and ESM (`import`) for
+  node specific projects
+- jsr a node and other ESM (`import`) compatible runtimes (deno, browser, node)
+
+If your application doesn't use `require`, you can simply depend on the JSR
+version.
+
+### NPM
+
+The NPM registry hosts a node-only compatible version of the library supporting
+both CJS and ESM:
+
+```bash
+npm install @nats-io/nats-core
+```
+
+### JSR
+
+The JSR registry hosts the ESM-only version of the library.
+
+```bash
+deno add jsr:@nats-io/jwt
+```
+
+```bash
+npx jsr add @nats-io/jwt
+```
+
+```bash
+yarn dlx jsr add @nats-io/jwt
+```
+
+```bash
+bunx jsr add @nats-io/jwt
+```
+
+## API
 
 The API of this library requires knowledge of the NATS JWT entities.
 

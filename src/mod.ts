@@ -19,6 +19,7 @@ export * from "./util.ts";
 
 export {
   createAccount,
+  createCurve,
   createOperator,
   createServer,
   createUser,
