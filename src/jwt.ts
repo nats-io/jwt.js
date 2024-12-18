@@ -74,7 +74,7 @@ function initAlgorithm(opts: Partial<EncodingOptions> = {}): EncodingOptions {
  */
 export async function encodeOperator(
   name: string,
-  okp: Key,
+  okp: Key | string,
   operator: Partial<Operator> = {},
   opts: Partial<EncodingOptions> = {},
 ): Promise<string> {
@@ -102,7 +102,7 @@ export async function encodeOperator(
  */
 export async function encodeAccount(
   name: string,
-  akp: Key,
+  akp: Key | string,
   account: Partial<Account> = {},
   opts: Partial<EncodingOptions> = {},
 ): Promise<string> {
@@ -122,8 +122,8 @@ export async function encodeAccount(
 
 export async function encodeUser(
   name: string,
-  ukp: Key,
-  issuer: Key,
+  ukp: Key | string,
+  issuer: Key | string,
   user: Partial<User> = {},
   opts: Partial<UserEncodingOptions> = {},
 ): Promise<string> {
@@ -147,8 +147,8 @@ export async function encodeUser(
 
 export function encodeActivation(
   name: string,
-  subject: Key,
-  issuer: Key,
+  subject: Key | string,
+  issuer: Key | string,
   kind: "service" | "stream",
   data: Partial<Activation> = {},
   opts: Partial<EncodingOptions> = {},
@@ -175,7 +175,7 @@ export function encodeActivation(
 
 export async function encodeGeneric(
   name: string,
-  akp: Key,
+  akp: Key | string,
   kind: string,
   data: Partial<Generic> = {},
   opts: Partial<EncodingOptions> = {},
@@ -199,9 +199,9 @@ export async function encodeGeneric(
 }
 
 export async function encodeAuthorizationResponse(
-  user: Key,
-  server: Key,
-  issuer: Key,
+  user: Key | string,
+  server: Key | string,
+  issuer: Key | string,
   data: Partial<AuthorizationResponse>,
   opts: Partial<EncodingOptions>,
 ): Promise<string> {

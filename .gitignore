@@ -17,3 +17,4 @@ esm/jwt.js
 cjs_src/
 debug/
 lib/
+.prettierignore
