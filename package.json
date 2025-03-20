@@ -1,6 +1,6 @@
 {
   "name": "@nats-io/jwt",
-  "version": "0.0.10-9",
+  "version": "0.0.11",
   "description": "NATS jwt.js",
   "main": "lib/mod.js",
   "types": "lib/mod.d.ts",
@@ -26,13 +26,13 @@
     "bump-release": "npm version patch --no-commit-hooks --no-git-tag-version"
   },
   "dependencies": {
-    "@nats-io/nkeys": "2.0.0-4"
+    "@nats-io/nkeys": "2.0.3"
   },
   "devDependencies": {
-    "@types/node": "^22.7.6",
-    "shx": "^0.3.3",
-    "typedoc": "^0.27.3",
-    "typescript": "^5.7.2"
+    "@types/node": "^22.13.10",
+    "shx": "^0.4.0",
+    "typedoc": "^0.28.1",
+    "typescript": "^5.8.2"
   },
   "repository": {
     "type": "git",
