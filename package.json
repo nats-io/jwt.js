@@ -18,7 +18,7 @@
     "build": "npm run clean && deno run -A bin/generate_version.ts && npm run build-cjs",
     "cjs": "shx rm -Rf ./cjs_src && deno run --allow-all ./bin/cjs-fix-imports.ts -o cjs_src/ ./src",
     "build-cjs": "npm run cjs && tsc",
-    "test": "deno test -A --unstable tests/",
+    "test": "deno test -A",
     "lint": "deno lint src/",
     "doc": "npm run clean && rm -Rf docs && npm run build && node_modules/.bin/typedoc --out docs/ && touch ./docs/.nojekyll",
     "check-package": "deno run --allow-all bin/check-bundle-version.ts",
@@ -31,8 +31,8 @@
   "devDependencies": {
     "@types/node": "^22.13.10",
     "shx": "^0.4.0",
-    "typedoc": "^0.28.1",
-    "typescript": "^5.8.2"
+    "typedoc": "^0.28.12",
+    "typescript": "^5.8.3"
   },
   "repository": {
     "type": "git",

@@ -14,7 +14,7 @@
 import { dirname, join } from "@std/path";
 import { ensureDir } from "@std/fs";
 import { assert } from "@std/assert";
-import { nuid } from "https://raw.githubusercontent.com/nats-io/nats.deno/main/nats-base-client/nuid.ts";
+import { nuid } from "@nats-io/nuid";
 import type { KeyPair } from "../src/mod.ts";
 import { decode, fromSeed, Types } from "../src/mod.ts";
 import type { Account } from "../src/mod.ts";

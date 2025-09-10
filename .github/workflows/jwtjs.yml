@@ -13,7 +13,7 @@ jobs:
   test:
     strategy:
       matrix:
-        deno-version: [2.1.x]
+        deno-version: [2.5.x]
     environment: CI
     runs-on: ubuntu-latest
     steps:
@@ -30,4 +30,4 @@ jobs:
           wget "https://github.com/nats-io/nsc/releases/latest/download/nsc-linux-amd64.zip" -O tmp.zip
           unzip tmp.zip
       - name: Run Tests
-        run: deno test --allow-all --unstable --failfast --coverage=./cov
+        run: deno test --allow-all --failfast --coverage=./cov
