@@ -16,9 +16,11 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.11",
+    "@std/cli": "jsr:@std/cli@^1.0.11",
     "@std/fs": "jsr:@std/fs@^1.0.14",
     "@std/path": "jsr:@std/path@^1.0.8",
-    "@nats-io/nkeys": "jsr:@nats-io/nkeys@2.0.3"
+    "@nats-io/nkeys": "jsr:@nats-io/nkeys@2.0.3",
+    "@nats-io/nuid": "jsr:@nats-io/nuid@^2.0.2"
   },
   "lint": {
     "exclude": ["docs/", "lib/", "debug/", "cjs_src/"]
