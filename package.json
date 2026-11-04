@@ -1,6 +1,6 @@
 {
   "name": "@nats-io/jwt",
-  "version": "0.1.0-0",
+  "version": "0.1.0-1",
   "description": "NATS jwt.js",
   "main": "lib/mod.js",
   "types": "lib/mod.d.ts",
