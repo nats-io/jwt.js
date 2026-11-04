@@ -9,20 +9,23 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
       matrix:
-        deno-version: [2.5.x]
+        deno-version: [2.9.x]
     environment: CI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Use Deno Version ${{ matrix.deno-version }}
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
           deno-version: ${{ matrix.deno-version }}
       - name: Get nsc
@@ -30,4 +33,4 @@ jobs:
           wget "https://github.com/nats-io/nsc/releases/latest/download/nsc-linux-amd64.zip" -O tmp.zip
           unzip tmp.zip
       - name: Run Tests
-        run: deno test --allow-all --failfast --coverage=./cov
+        run: deno test --allow-all --fail-fast --coverage=./cov

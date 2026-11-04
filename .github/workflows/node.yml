@@ -1,0 +1,42 @@
+name: test cjs
+
+on:
+  push:
+    tags:
+      - "*"
+    branches:
+      - "*"
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.config.kind }} ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version: [2.9.x]
+        node-version: [22.x, 24.x, 26.x]
+
+    steps:
+      - name: checkout jwt.js
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Use Deno Version ${{ matrix.deno-version }}
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ matrix.deno-version }}
+
+      - run: npm ci
+      - run: npm run test-node

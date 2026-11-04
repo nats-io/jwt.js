@@ -2,5 +2,7 @@
   "readme": "./README.md",
   "theme": "default",
   "out": "docs/",
-  "entryPoints": ["cjs_src/mod.ts"]
+  "entryPoints": [
+    "src/mod.ts"
+  ]
 }
