@@ -56,4 +56,7 @@ jobs:
           else
             npm publish --provenance --access public --tag=${NPM_TAG}
           fi
-      - run: npx jsr publish --allow-dirty
+      - name: Publish JSR
+        # use the runner's deno (2.9); npx jsr downloads an older deno that
+        # rejects deno.json's minimumDependencyAge setting
+        run: deno publish --allow-dirty
