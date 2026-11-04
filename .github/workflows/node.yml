@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   test:
-    name: ${{ matrix.config.kind }} ${{ matrix.config.os }}
+    name: node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
 
     strategy:
