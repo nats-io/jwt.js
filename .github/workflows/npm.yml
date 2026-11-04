@@ -1,4 +1,4 @@
-name: nats-jwt NPM release
+name: npm/jsr release
 
 on:
   release:
@@ -8,8 +8,8 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: [24.x]
-        deno-version: [2.5.x]
+        node-version: [26.x]
+        deno-version: [2.9.x]
 
     runs-on: ubuntu-latest
     permissions:
@@ -17,28 +17,43 @@ jobs:
       id-token: write
 
     steps:
-      - name: Checkout nkeys.js
-        uses: actions/checkout@v4
+      - name: Checkout jwt.js
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: "https://registry.npmjs.org"
       - name: Use Deno Version ${{ matrix.deno-version }}
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
           deno-version: ${{ matrix.deno-version }}
       - run: npm install -g npm
       - run: npm ci
       - name: Set tag
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        run: |
+          VER="${GITHUB_REF#refs/*/}"
+          echo "RELEASE_VERSION=$VER" >> $GITHUB_ENV
+          # prereleases (0.1.0-0) go to next, so they don't become latest
+          if [[ "$VER" == *-* ]]; then
+            echo "NPM_TAG=next" >> $GITHUB_ENV
+          else
+            echo "NPM_TAG=latest" >> $GITHUB_ENV
+          fi
       - name: Test tag
         run: |
           npm run check-package
       - run: npm run clean
-      - run: npm publish --provenance --access public --tag=next
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish npm
+        run: |
+          # skip a version that is already published, so the job can be rerun
+          NAME=$(node -p "require('./package.json').name")
+          VER=$(node -p "require('./package.json').version")
+          if [ -n "$(npm view "$NAME@$VER" version 2>/dev/null)" ]; then
+            echo "$NAME@$VER is already on npm, skipping"
+          else
+            npm publish --provenance --access public --tag=${NPM_TAG}
+          fi
       - run: npx jsr publish --allow-dirty
