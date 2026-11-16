@@ -1,15 +1,15 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@nats-io/nkeys@2.1.0-0": "2.1.0-0",
-    "jsr:@nats-io/nuid@3.1.0-0": "3.1.0-0",
+    "jsr:@nats-io/nkeys@2.1.0": "2.1.0",
+    "jsr:@nats-io/nuid@3.1.0": "3.1.0",
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/fs@^1.0.24": "1.0.24",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "jsr:@std/internal@^1.0.14": "1.0.14",
     "jsr:@std/path@^1.1.5": "1.1.6",
     "jsr:@std/path@^1.1.6": "1.1.6",
-    "npm:@nats-io/nkeys@2.1.0-0": "2.1.0-0",
+    "npm:@nats-io/nkeys@2.1.0": "2.1.0",
     "npm:@types/node@^26.6.6": "26.6.6",
     "npm:shx@0.4": "0.4.0",
     "npm:tweetnacl@1.0.3": "1.0.3",
@@ -17,14 +17,14 @@
     "npm:typescript@^6.0.3": "6.0.3"
   },
   "jsr": {
-    "@nats-io/nkeys@2.1.0-0": {
-      "integrity": "1195f0e73089d071f828db8e33a5dec85b9881ace5ade4b55a1fee33b028dcf1",
+    "@nats-io/nkeys@2.1.0": {
+      "integrity": "e0f1988e342695f5bfcaf400652b7f103e67189fe252b1d7a741f45790a4eeb4",
       "dependencies": [
         "npm:tweetnacl"
       ]
     },
-    "@nats-io/nuid@3.1.0-0": {
-      "integrity": "e6d7b83a6695feb167759423729f4834c00784efca4bf4c9927c046303810ae5"
+    "@nats-io/nuid@3.1.0": {
+      "integrity": "ebd5fac37850648d48980b40baf1f67d9811aa855d6dce2fd5b54f91de4911e2"
     },
     "@std/assert@1.0.19": {
       "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
@@ -60,8 +60,8 @@
         "@shikijs/vscode-textmate"
       ]
     },
-    "@nats-io/nkeys@2.1.0-0": {
-      "integrity": "sha512-yLAttw7NLBoTa/8yqeb59KT99iyhH56e3xb98j24GJfThWgPuB5VEGGJQHVAhYaVjZ1MJtvlgcdbaq6AXfdE2A==",
+    "@nats-io/nkeys@2.1.0": {
+      "integrity": "sha512-vLMgwfPouG2Utp3hHUfdmMVEGEQ202tLES/pOAOfTJR5hwWGymm2mKuo3UMYv9kNw7awpcTBfEAljFqZcFm1lA==",
       "dependencies": [
         "tweetnacl"
       ]
@@ -445,15 +445,15 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@nats-io/nkeys@2.1.0-0",
-      "jsr:@nats-io/nuid@3.1.0-0",
+      "jsr:@nats-io/nkeys@2.1.0",
+      "jsr:@nats-io/nuid@3.1.0",
       "jsr:@std/assert@^1.0.19",
       "jsr:@std/fs@^1.0.24",
       "jsr:@std/path@^1.1.6"
     ],
     "packageJson": {
       "dependencies": [
-        "npm:@nats-io/nkeys@2.1.0-0",
+        "npm:@nats-io/nkeys@2.1.0",
         "npm:@types/node@^26.6.6",
         "npm:shx@0.4",
         "npm:typedoc@~0.28.20",
