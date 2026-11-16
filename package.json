@@ -1,6 +1,6 @@
 {
   "name": "@nats-io/jwt",
-  "version": "0.1.0-1",
+  "version": "0.1.0",
   "description": "NATS jwt.js",
   "main": "lib/mod.js",
   "types": "lib/mod.d.ts",
@@ -40,7 +40,7 @@
     "test-node": "node --test test/basics.js"
   },
   "dependencies": {
-    "@nats-io/nkeys": "2.1.0-0"
+    "@nats-io/nkeys": "2.1.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
